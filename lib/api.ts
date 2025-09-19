@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
-  withCredentials: true,
+  baseURL: 'https://api.uygunlik.uz',
+  withCredentials: false,
 });
 
 api.interceptors.request.use((config) => {
