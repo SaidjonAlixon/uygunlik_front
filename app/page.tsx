@@ -325,7 +325,7 @@ export default function HomePage() {
                 </SheetClose>
                 <SheetClose asChild>
                   <Link
-                    href={"/auth"}
+                    href={"/register"}
                     className="text-2xl hover:underline underline-offset-4 text-left"
                   >
                     Ro'yhatdan o'tish
