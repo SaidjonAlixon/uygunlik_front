@@ -413,6 +413,59 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* STM BU bo'limi */}
+        <section className="py-20 px-4 bg-red-900 min-h-screen flex items-center">
+          <div className="container mx-auto">
+            <div className="max-w-5xl mx-auto relative">
+              <div className="min-h-screen bg-red-900 text-white flex flex-col items-center justify-center p-6 relative">
+                {/* Asosiy doira */}
+                <div className="relative w-64 h-64 flex items-center justify-center">
+                  {/* Daire chizig'i */}
+                  <div className="absolute inset-0 rounded-full border-2 border-white"></div>
+
+                  {/* Rasm */}
+                  <img
+                    src="/images/hero-woman.png"
+                    alt="STM BU"
+                    className="absolute inset-0 w-full h-full object-cover rounded-full opacity-90"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+
+                  {/* Markaziy matn */}
+                  <h1 className="text-2xl font-bold relative z-10">STM BU</h1>
+
+                  {/* Yuqoridagi matn */}
+                  <p className="absolute -top-16 w-48 text-center text-base font-semibold">
+                    Harorat va ajralmalarni tahlil qilish
+                  </p>
+
+                  {/* O'ngdagi matn */}
+                  <p className="absolute right-[-200px] top-1/2 -translate-y-1/2 w-48 text-center text-base font-semibold">
+                    Spiral va gormonal tabletkalarsiz qo'rquvsiz yaqinlik
+                  </p>
+
+                  {/* Pastdagi matn */}
+                  <p className="absolute -bottom-16 w-48 text-center text-base font-semibold">
+                    99,6% aniqlik bilan tabiiy rejalashtirish
+                  </p>
+
+                  {/* Chapdagi matn */}
+                  <p className="absolute left-[-200px] top-1/2 -translate-y-1/2 w-48 text-center text-base font-semibold">
+                    Hayz ritmingizga mos, ongli va muvozanatli hayot
+                  </p>
+                </div>
+
+                {/* Pastki slogan */}
+                <p className="mt-32 text-center italic text-2xl max-w-2xl font-medium">
+                  Bu – tanangiz bilan hamohanglikda yashash san'ati.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* kurslar kimlar uchun */}
         <section className="py-16 px-4">
           <div className="container mx-auto">
@@ -442,8 +495,20 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <Users className="h-12 w-12 text-red-800" />
+                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                        <img 
+                          src="/images/icons/women-group.png" 
+                          alt="Doimiy xavotirda yashaydigan ayollar"
+                          className="w-full h-full object-cover rounded-full"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                            if (nextElement) {
+                              nextElement.style.display = 'block';
+                            }
+                          }}
+                        />
+                        <Users className="h-12 w-12 text-red-800 hidden" />
                       </div>
                     </div>
                     <p className="text-gray-600 mb-4">
@@ -502,8 +567,20 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <Heart className="h-12 w-12 text-red-800" />
+                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                        <img 
+                          src="/images/icons/pregnancy-heart.png" 
+                          alt="Homilador bo'lishni xohlayotgan ayollar"
+                          className="w-full h-full object-cover rounded-full"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                            if (nextElement) {
+                              nextElement.style.display = 'block';
+                            }
+                          }}
+                        />
+                        <Heart className="h-12 w-12 text-red-800 hidden" />
                       </div>
                     </div>
                     <p className="text-gray-600 mb-4">
@@ -554,8 +631,20 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <Award className="h-12 w-12 text-red-800" />
+                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                        <img 
+                          src="/images/icons/mother-baby.png" 
+                          alt="Yaqinda ona bo'lgan ayollar"
+                          className="w-full h-full object-cover rounded-full"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
+                            if (nextElement) {
+                              nextElement.style.display = 'block';
+                            }
+                          }}
+                        />
+                        <Award className="h-12 w-12 text-red-800 hidden" />
                       </div>
                     </div>
                     <p className="text-gray-600 mb-4">
