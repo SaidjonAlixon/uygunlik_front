@@ -17,6 +17,7 @@ import {
   Award,
   CheckCircle,
   ArrowRight,
+  ArrowLeft,
   Plus,
   Minus,
   Menu,
@@ -171,14 +172,41 @@ const ReviewsCarousel = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % reviews.length);
-    }, 5000); // 5 soniya
+    }, 15000); // 15 soniya
 
     return () => clearInterval(interval);
   }, [reviews.length]);
 
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? reviews.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % reviews.length);
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="relative overflow-hidden">
+        {/* Navigation buttons */}
+        <button
+          onClick={goToPrevious}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-300 hover:scale-110"
+          aria-label="Oldingi sharh"
+        >
+          <ArrowLeft className="h-6 w-6 text-red-600" />
+        </button>
+        
+        <button
+          onClick={goToNext}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all duration-300 hover:scale-110"
+          aria-label="Keyingi sharh"
+        >
+          <ArrowRight className="h-6 w-6 text-red-600" />
+        </button>
+
         <motion.div
           className="flex"
           animate={{ x: -currentIndex * 100 + "%" }}
@@ -242,10 +270,63 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FEFBEE] text-gray-800 overflow-x-hidden">
-      {/* --- Header --- */}
+      {/* --- Sticky Mobile Menu Button --- */}
+      <div className="fixed top-4 right-4 z-50 lg:hidden">
+        <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+          <SheetTrigger asChild>
+            <button className="p-3 rounded-full text-white bg-red-800 shadow-lg hover:bg-red-900 transition-all duration-300 hover:scale-110">
+              <span className="sr-only">Open menu</span>
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="bg-red-900 text-white border-none p-8"
+            onCloseAutoFocus={(e) => e.preventDefault()}
+          >
+            <SheetHeader className="mb-8">
+              <SheetTitle className="text-white text-2xl font-bold text-left"></SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col gap-3">
+              {navLinks.map((link) => (
+                <SheetClose asChild key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-2xl hover:underline underline-offset-4 text-left"
+                  >
+                    {link.label}
+                  </Link>
+                </SheetClose>
+              ))}
+              <SheetClose asChild>
+                <Link
+                  href={"/auth"}
+                  className="text-2xl hover:underline underline-offset-4 text-left"
+                >
+                  Kirish
+                </Link>
+              </SheetClose>
+              <SheetClose asChild>
+                <Link
+                  href={"/register"}
+                  className="text-2xl hover:underline underline-offset-4 text-left"
+                >
+                  Ro'yhatdan o'tish
+                </Link>
+              </SheetClose>
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* --- Desktop Header --- */}
       <div
         id="main"
-        className="container mx-auto px-4 sm:px-6 lg:px-8 top-0 left-0 absolute lg:static z-50"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 top-0 left-0 absolute lg:static z-40"
       >
         <div className="flex items-center lg:justify-end py-2">
           {/* Desktop Navigation */}
@@ -283,57 +364,6 @@ export default function HomePage() {
               </>
             )}
           </div>
-
-          {/* Mobile Menu Button */}
-          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-            <SheetTrigger asChild>
-              <button className="lg:hidden p-2 rounded-full text-white bg-red-800">
-                <span className="sr-only">Open menu</span>
-                {isMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
-              </button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="bg-red-900 text-white border-none p-8"
-              onCloseAutoFocus={(e) => e.preventDefault()}
-            >
-              <SheetHeader className="mb-8">
-                <SheetTitle className="text-white text-2xl font-bold text-left"></SheetTitle>
-              </SheetHeader>
-              <nav className="flex flex-col gap-3">
-                {navLinks.map((link) => (
-                  <SheetClose asChild key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-2xl hover:underline underline-offset-4 text-left"
-                    >
-                      {link.label}
-                    </Link>
-                  </SheetClose>
-                ))}
-                <SheetClose asChild>
-                  <Link
-                    href={"/auth"}
-                    className="text-2xl hover:underline underline-offset-4 text-left"
-                  >
-                    Kirish
-                  </Link>
-                </SheetClose>
-                <SheetClose asChild>
-                  <Link
-                    href={"/register"}
-                    className="text-2xl hover:underline underline-offset-4 text-left"
-                  >
-                    Ro'yhatdan o'tish
-                  </Link>
-                </SheetClose>
-              </nav>
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
       <main>
