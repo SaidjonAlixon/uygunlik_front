@@ -414,51 +414,55 @@ export default function HomePage() {
         </section>
 
         {/* STM BU bo'limi */}
-        <section className="py-20 px-4 bg-red-900 min-h-screen flex items-center">
+        <section className="py-20 px-4 bg-[#801d1d] min-h-screen flex items-center">
           <div className="container mx-auto">
-            <div className="max-w-5xl mx-auto relative">
-              <div className="min-h-screen bg-red-900 text-white flex flex-col items-center justify-center p-6 relative">
-                {/* Asosiy doira */}
-                <div className="relative w-64 h-64 flex items-center justify-center">
-                  {/* Daire chizig'i */}
-                  <div className="absolute inset-0 rounded-full border-2 border-white"></div>
+            <div className="min-h-screen w-full bg-[#801d1d] text-white flex items-center justify-center p-5">
+              <div className="w-full max-w-sm mx-auto">
+                {/* Yuqoridagi 2 ta matn */}
+                <div className="grid grid-cols-2 gap-5 text-center text-base leading-relaxed mb-6">
+                  <p>Harorat va ajralmalarni tahlil qilish</p>
+                  <p>Spiral va gormonal tabletkalarsiz qo'rquvsiz yaqinlik</p>
+                </div>
 
-                  {/* Rasm */}
+                {/* Doira + rasm + halqalar + nuqtalar */}
+                <div className="relative mx-auto my-2 w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem]">
+                  {/* Tashqi halqa */}
+                  <div className="absolute inset-0 rounded-full border border-white/60" />
+                  {/* Ichki halqa (biroz kichikroq) */}
+                  <div className="absolute inset-2 rounded-full border border-white/80" />
+
+                  {/* Rasm (doira ichida) */}
                   <img
                     src="/images/hero-woman.png"
                     alt="STM BU"
-                    className="absolute inset-0 w-full h-full object-cover rounded-full opacity-90"
+                    className="absolute inset-3 w-[calc(100%-24px)] h-[calc(100%-24px)] object-cover rounded-full"
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
                     }}
                   />
 
-                  {/* Markaziy matn */}
-                  <h1 className="text-2xl font-bold relative z-10">STM BU</h1>
+                  {/* Oq nuqtalar (N, E, S, W) */}
+                  <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
+                  <span className="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white" />
+                  <span className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white" />
 
-                  {/* Yuqoridagi matn */}
-                  <p className="absolute -top-16 w-48 text-center text-base font-semibold">
-                    Harorat va ajralmalarni tahlil qilish
-                  </p>
-
-                  {/* O'ngdagi matn */}
-                  <p className="absolute right-[-200px] top-1/2 -translate-y-1/2 w-48 text-center text-base font-semibold">
-                    Spiral va gormonal tabletkalarsiz qo'rquvsiz yaqinlik
-                  </p>
-
-                  {/* Pastdagi matn */}
-                  <p className="absolute -bottom-16 w-48 text-center text-base font-semibold">
-                    99,6% aniqlik bilan tabiiy rejalashtirish
-                  </p>
-
-                  {/* Chapdagi matn */}
-                  <p className="absolute left-[-200px] top-1/2 -translate-y-1/2 w-48 text-center text-base font-semibold">
-                    Hayz ritmingizga mos, ongli va muvozanatli hayot
-                  </p>
+                  {/* Markaziy sarlavha */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="font-extrabold tracking-wide text-[32px] sm:text-[36px] md:text-[40px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
+                      STM BU
+                    </span>
+                  </div>
                 </div>
 
-                {/* Pastki slogan */}
-                <p className="mt-32 text-center italic text-2xl max-w-2xl font-medium">
+                {/* Pastdagi 2 ta matn */}
+                <div className="grid grid-cols-2 gap-5 text-center text-base leading-relaxed mt-6">
+                  <p>Hayz ritmingizga mos, ongli va muvozanatli hayot</p>
+                  <p>99,6% aniqlik bilan tabiiy rejalashtirish</p>
+                </div>
+
+                {/* Slogan */}
+                <p className="mt-8 text-center italic text-xl font-bold text-white/95">
                   Bu – tanangiz bilan hamohanglikda yashash san'ati.
                 </p>
               </div>
