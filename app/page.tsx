@@ -433,7 +433,7 @@ export default function HomePage() {
         )}
       </AnimatePresence>
       {/* --- Sticky Mobile Menu Button --- */}
-      <div className="fixed top-4 right-4 z-40 lg:hidden">
+      <div className="fixed top-16 right-4 z-40 lg:hidden">
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetTrigger asChild>
             <button className="p-3 rounded-full text-white bg-red-800 shadow-lg hover:bg-red-900 transition-all duration-300 hover:scale-110">
@@ -632,7 +632,7 @@ export default function HomePage() {
                 scale: showMainContent ? 1 : 0.8 
               }}
               transition={{ duration: 0.8, delay: 1.5 }}
-              className="absolute bottom-40 left-1/2 transform -translate-x-1/2 z-50"
+              className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-50"
               style={{ marginLeft: '-48px' }}
             >
               <Link
