@@ -433,7 +433,7 @@ export default function HomePage() {
         )}
       </AnimatePresence>
       {/* --- Sticky Mobile Menu Button --- */}
-      <div className="fixed top-4 right-4 z-50 lg:hidden">
+      <div className="fixed top-4 right-4 z-40 lg:hidden">
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetTrigger asChild>
             <button className="p-3 rounded-full text-white bg-red-800 shadow-lg hover:bg-red-900 transition-all duration-300 hover:scale-110">
@@ -488,7 +488,7 @@ export default function HomePage() {
       {/* --- Desktop Header --- */}
       <div
         id="main"
-        className="container mx-auto px-4 sm:px-6 lg:px-8 top-0 left-0 absolute lg:static z-40"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 top-0 left-0 absolute lg:static z-30"
       >
         <div className="flex items-center lg:justify-end py-2">
           {/* Desktop Navigation */}
@@ -551,6 +551,7 @@ export default function HomePage() {
                   y: showMainContent ? 0 : 20 
                 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative z-50"
               >
                 <img
                   src="/images/logo-decorated.png"
@@ -559,7 +560,7 @@ export default function HomePage() {
                 />
               </motion.div>{" "}
               <motion.h1
-                className="font-dancing text-xl sm:text-3xl md:text-5xl"
+                className="font-dancing text-xl sm:text-3xl md:text-5xl relative z-50"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ 
                   opacity: showMainContent ? 1 : 0, 
@@ -570,7 +571,7 @@ export default function HomePage() {
                 Ayollik tabiatingiz bilan hamohanglikda yashang
               </motion.h1>
               <motion.p
-                className="mx-auto text-sm sm:text-lg font-bold md:text-xl mb-3"
+                className="mx-auto text-sm sm:text-lg font-bold md:text-xl mb-3 relative z-50"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ 
                   opacity: showMainContent ? 1 : 0, 
@@ -582,7 +583,7 @@ export default function HomePage() {
                 rejalashtiring yoki oldini oling
               </motion.p>
               <motion.p
-                className="mx-auto border-t border-b border-[#5D1111] max-w-[120px] w-full mb-2"
+                className="mx-auto border-t border-b border-[#5D1111] max-w-[120px] w-full mb-2 relative z-50"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ 
                   opacity: showMainContent ? 1 : 0, 
@@ -599,7 +600,7 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.8 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className=""
+                className="relative z-50"
               >
                 <ul className="text-[#5D1111] flex items-center flex-col sm:flex-row gap-x-1">
                   <li className="font-bold">Start:</li>
@@ -631,12 +632,14 @@ export default function HomePage() {
                 scale: showMainContent ? 1 : 0.8 
               }}
               transition={{ duration: 0.8, delay: 1.5 }}
+              className="absolute bottom-40 left-1/2 transform -translate-x-1/2 z-50"
+              style={{ marginLeft: '-48px' }}
             >
               <Link
                 href={"#pricing"}
-                className="absolute h-40 w-40 border rounded-full bottom-40 z-50 flex items-center justify-center text-white hover:scale-105 transition-transform duration-300"
+                className="h-40 w-40 border rounded-full flex items-center justify-center text-white hover:scale-105 transition-transform duration-300"
               >
-                <p className="text-xl">
+                <p className="text-xl text-center">
                   ISHTIROK <br /> ETAMAN
                 </p>
                 <span className="h-4 w-4 bg-white rounded-full right-4 bottom-4 absolute"></span>
