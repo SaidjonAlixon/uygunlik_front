@@ -35,6 +35,81 @@ import {
 } from "@/components/ui/sheet";
 import { useUserStore } from "@/store/user.store";
 
+// Loading Screen Component
+const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onComplete();
+    }, 3000); // 3 soniya loading
+
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="fixed inset-0 bg-[#FEFBEE] flex items-center justify-center z-50"
+    >
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ 
+          duration: 1,
+          ease: "easeOut"
+        }}
+        className="text-center"
+      >
+        <motion.img
+          src="/images/logo-main.png"
+          alt="Uyg'unlik Logo"
+          className="h-40 md:h-56 lg:h-64 mx-auto mb-8"
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          transition={{ 
+            duration: 0.8,
+            delay: 0.2,
+            ease: "easeOut"
+          }}
+        />
+        <motion.h1
+          className="font-dancing text-2xl md:text-4xl text-[#5D1111] mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.8,
+            delay: 0.5,
+            ease: "easeOut"
+          }}
+        >
+          Ayollik tabiatingiz bilan hamohanglikda yashang
+        </motion.h1>
+        <motion.div
+          className="flex justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ 
+            duration: 0.5,
+            delay: 1,
+            ease: "easeOut"
+          }}
+        >
+          <motion.div
+            className="w-8 h-8 border-4 border-[#5D1111] border-t-transparent rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{
+              duration: 1,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 // FAQ Accordion Component
 const FAQAccordion = () => {
   const [openItems, setOpenItems] = useState<number[]>([]);
@@ -310,6 +385,35 @@ const ReviewsCarousel = () => {
 export default function HomePage() {
   const { user } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showMainContent, setShowMainContent] = useState(false);
+
+  // Loading completion handler
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    // Kichik kechikish bilan asosiy kontentni ko'rsatish
+    setTimeout(() => {
+      setShowMainContent(true);
+    }, 500);
+  };
+
+  // Scroll animation effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      
+      // Agar scroll pastga qilingan bo'lsa, animatsiyalarni ishga tushirish
+      if (scrollY > windowHeight * 0.1) {
+        setShowMainContent(true);
+      }
+    };
+
+    if (!isLoading) {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [isLoading]);
 
   const navLinks = [
     { href: "/#main", label: "Bosh sahifa" },
@@ -322,6 +426,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FEFBEE] text-gray-800 overflow-x-hidden">
+      {/* Loading Screen */}
+      <AnimatePresence>
+        {isLoading && (
+          <LoadingScreen onComplete={handleLoadingComplete} />
+        )}
+      </AnimatePresence>
       {/* --- Sticky Mobile Menu Button --- */}
       <div className="fixed top-4 right-4 z-50 lg:hidden">
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -420,24 +530,41 @@ export default function HomePage() {
       </div>
       <main>
         {/* --- Hero Section --- */}
-        <section className="relative w-full h-screen md:h-full">
+        <motion.section 
+          className="relative w-full h-screen md:h-full"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: showMainContent ? 1 : 0,
+            y: showMainContent ? 0 : 50
+          }}
+          transition={{ 
+            duration: 1,
+            ease: "easeOut"
+          }}
+        >
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="flex flex-col items-center justify-center text-center text-[#5D1111] pt-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={{ 
+                  opacity: showMainContent ? 1 : 0, 
+                  y: showMainContent ? 0 : 20 
+                }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
                 <img
                   src="/images/logo-decorated.png"
                   alt="Uyg'unlik Logo"
-                  className="h-11 md:h-24 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
+                  className="h-20 md:h-40 lg:h-48 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
                 />
               </motion.div>{" "}
               <motion.h1
                 className="font-dancing text-xl sm:text-3xl md:text-5xl"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={{ 
+                  opacity: showMainContent ? 1 : 0, 
+                  y: showMainContent ? 0 : 20 
+                }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               >
                 Ayollik tabiatingiz bilan hamohanglikda yashang
@@ -445,7 +572,10 @@ export default function HomePage() {
               <motion.p
                 className="mx-auto text-sm sm:text-lg font-bold md:text-xl mb-3"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={{ 
+                  opacity: showMainContent ? 1 : 0, 
+                  y: showMainContent ? 0 : 20 
+                }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
                 Tabiiy usul bilan homiladorlikni<br />
@@ -454,12 +584,18 @@ export default function HomePage() {
               <motion.p
                 className="mx-auto border-t border-b border-[#5D1111] max-w-[120px] w-full mb-2"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                animate={{ 
+                  opacity: showMainContent ? 1 : 0, 
+                  y: showMainContent ? 0 : 20 
+                }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               ></motion.p>
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
+                animate={{ 
+                  opacity: showMainContent ? 1 : 0, 
+                  scale: showMainContent ? 1 : 0.8 
+                }}
                 transition={{ duration: 0.5, delay: 0.8 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -473,7 +609,7 @@ export default function HomePage() {
                 </ul>
               </motion.div>
             </div>
-            <video
+            <motion.video
               src="/women.mp4"
               poster="/images/header.jpg" // Fallback image
               autoPlay
@@ -481,19 +617,34 @@ export default function HomePage() {
               muted
               playsInline
               className="w-full h-full object-cover"
-            ></video>
-            <Link
-              href={"#pricing"}
-              className="absolute h-40 w-40 border rounded-full bottom-40 z-50 flex items-center justify-center text-white"
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ 
+                opacity: showMainContent ? 1 : 0, 
+                scale: showMainContent ? 1 : 1.1 
+              }}
+              transition={{ duration: 1.2, delay: 1 }}
+            ></motion.video>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ 
+                opacity: showMainContent ? 1 : 0, 
+                scale: showMainContent ? 1 : 0.8 
+              }}
+              transition={{ duration: 0.8, delay: 1.5 }}
             >
-              <p className="text-xl">
-                ISHTIROK <br /> ETAMAN
-              </p>
-              <span className="h-4 w-4 bg-white rounded-full right-4 bottom-4 absolute"></span>
-            </Link>
+              <Link
+                href={"#pricing"}
+                className="absolute h-40 w-40 border rounded-full bottom-40 z-50 flex items-center justify-center text-white hover:scale-105 transition-transform duration-300"
+              >
+                <p className="text-xl">
+                  ISHTIROK <br /> ETAMAN
+                </p>
+                <span className="h-4 w-4 bg-white rounded-full right-4 bottom-4 absolute"></span>
+              </Link>
+            </motion.div>
             <div className="absolute z-10 bottom-0 h-[300px] md:h-[400px] w-full left-0 bg-gradient-to-t from-red-900 from-20% to-transparent"></div>
           </div>
-        </section>
+        </motion.section>
 
         {/* STM BU bo'limi */}
         <section className="py-20 px-4 bg-[#801d1d] min-h-screen flex items-center">
