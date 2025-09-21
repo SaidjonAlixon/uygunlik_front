@@ -433,7 +433,7 @@ export default function HomePage() {
         )}
       </AnimatePresence>
       {/* --- Sticky Mobile Menu Button --- */}
-      <div className="fixed top-16 right-4 z-40 lg:hidden">
+      <div className="fixed top-2 right-2 z-40 lg:hidden">
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetTrigger asChild>
             <button className="p-3 rounded-full text-white bg-red-800 shadow-lg hover:bg-red-900 transition-all duration-300 hover:scale-110">
@@ -543,7 +543,7 @@ export default function HomePage() {
           }}
         >
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="flex flex-col items-center justify-center text-center text-[#5D1111] pt-8">
+            <div className="flex flex-col items-center justify-center text-center text-[#5D1111] pt-16">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ 
