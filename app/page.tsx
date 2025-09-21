@@ -117,6 +117,7 @@ const FAQAccordion = () => {
 // Reviews Carousel komponenti
 const ReviewsCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [expandedReviews, setExpandedReviews] = useState<Set<number>>(new Set());
 
   const reviews = [
     {
@@ -159,7 +160,7 @@ const ReviewsCarousel = () => {
       name: "Muhammad's wife",
       handle: "@zavjatuM",
       initial: "M",
-      text: "Assalamu alaykum Nozima opa darsliklar juda sifatli tayyorlangan ozimni anchagina angladim ozimni kuzatishni organdim tahlil qilishni ham. Avvalgi homiladorlik vaqtimda bolgan muammolarni sababini bilmasdim tabiiyki vrachlar ham tushuntirib bermagan edi har bir darslikda man homilador vaqtimda bolgan muammolarni ildizini ham topdim va keyingi homilada albatta buni oz nazoratimga olaman deb niyat qildim. Kurs faqat saqlanish emas balki ongli ravishda farzandli bolish va tugruqqa tayarlov...",
+      text: "Assalamu alaykum Nozima opa darsliklar juda sifatli tayyorlangan ozimni anchagina angladim ozimni kuzatishni organdim tahlil qilishni ham. Avvalgi homiladorlik vaqtimda bolgan muammolarni sababini bilmasdim tabiiyki vrachlar ham tushuntirib bermagan edi har bir darslikda man homilador vaqtimda bolgan muammolarni ildizini ham topdim va keyingi homilada albatta buni oz nazoratimga olaman deb niyat qildim. Kurs faqat saqlanish emas balki ongli ravishda farzandli bolish va tugruqqa tayarlov desa ham boladi. Bu kursdan song avval ozimda va birga oqigan qizlarda ham kutilgan farzand boladi deya olaman. 💯 sodda chuntirgansiz guruhda ham activsiz Nozima opa ochiq samimiy ekansiz ozizni hecham katta tutib gapirmadiz bizaga oson bolishi chunarli va qollashimizga oson qilib berdiz hammasini astoydil harakat qildiz va qilib kevos rahmat kottakon tolagan pulimga hecham afsuslanmadim",
     },
     {
       name: "Aisha Shoakmalova",
@@ -185,6 +186,33 @@ const ReviewsCarousel = () => {
 
   const goToNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % reviews.length);
+  };
+
+  const toggleExpanded = (index: number) => {
+    setExpandedReviews(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  const getDisplayText = (text: string, index: number) => {
+    // Only Muhammad's wife's review (index 6) should be expandable
+    if (index === 6) {
+      const isExpanded = expandedReviews.has(index);
+      const halfLength = Math.floor(text.length / 2);
+      
+      if (isExpanded) {
+        return text;
+      } else {
+        return text.substring(0, halfLength) + "...";
+      }
+    }
+    return text;
   };
 
   return (
@@ -230,9 +258,19 @@ const ReviewsCarousel = () => {
                     <p className="text-sm text-gray-600">{review.handle}</p>
                   </div>
                 </div>
-                <p className="text-gray-700 leading-relaxed text-lg">
-                  "{review.text}"
-                </p>
+                <div className="text-gray-700 leading-relaxed text-lg">
+                  <p className="mb-2">
+                    "{getDisplayText(review.text, index)}"
+                  </p>
+                  {index === 6 && (
+                    <button
+                      onClick={() => toggleExpanded(index)}
+                      className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors duration-200"
+                    >
+                      {expandedReviews.has(index) ? "Kamroq ko'rsatish" : "To'liq o'qish"}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}
