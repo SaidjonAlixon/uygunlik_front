@@ -677,19 +677,43 @@ export default function HomePage() {
                     }}
                   />
 
-                  {/* Aylanib turadigan nuqtalar */}
-                  <div className="absolute inset-0 animate-spin" style={{ animationDuration: '8s' }}>
-                    <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
-                  </div>
-                  <div className="absolute inset-0 animate-spin" style={{ animationDelay: '2s', animationDuration: '8s' }}>
-                    <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
-                  </div>
-                  <div className="absolute inset-0 animate-spin" style={{ animationDelay: '4s', animationDuration: '8s' }}>
-                    <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
-                  </div>
-                  <div className="absolute inset-0 animate-spin" style={{ animationDelay: '6s', animationDuration: '8s' }}>
-                    <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
-                  </div>
+                  {/* Aylanib turadigan anor logolari */}
+                  {/* O'ng tomonga aylanadigan logo */}
+                  <motion.div 
+                    className="absolute inset-0"
+                    animate={{ rotate: 360 }}
+                    transition={{ 
+                      duration: 12, 
+                      ease: "linear",
+                      repeat: Infinity,
+                      repeatType: "loop"
+                    }}
+                  >
+                    <img 
+                      src="/images/anor.png" 
+                      alt="Anor logo" 
+                      className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-10 object-contain" 
+                    />
+                  </motion.div>
+                  
+                  {/* Chap tomonga aylanadigan logo */}
+                  <motion.div 
+                    className="absolute inset-0"
+                    animate={{ rotate: -360 }}
+                    transition={{ 
+                      duration: 12, 
+                      ease: "linear",
+                      repeat: Infinity,
+                      repeatType: "loop",
+                      delay: 6
+                    }}
+                  >
+                    <img 
+                      src="/images/anor.png" 
+                      alt="Anor logo" 
+                      className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-10 object-contain" 
+                    />
+                  </motion.div>
 
                   {/* Markaziy sarlavha */}
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -995,7 +1019,7 @@ export default function HomePage() {
         </section> */}
 
         {/* --- Course Content Section --- */}
-        <section id="courses" className="py-0 px-4 relative overflow-hidden">
+        <section id="courses" className="py-0 px-4 relative overflow-hidden -mb-8">
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <img
@@ -1330,7 +1354,7 @@ export default function HomePage() {
         </section>
 
         {/* Ilmiy Asoslangan Samaradorlik */}
-        <section className="py-0 px-4 relative overflow-hidden">
+        <section className="py-0 px-4 relative overflow-hidden -mt-8">
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <img

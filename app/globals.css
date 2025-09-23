@@ -6,6 +6,19 @@
   .text-balance {
     text-wrap: balance;
   }
+  
+  .animate-reverse-spin {
+    animation: reverse-spin 8s linear infinite;
+  }
+  
+  @keyframes reverse-spin {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
 }
 
 @layer base {
