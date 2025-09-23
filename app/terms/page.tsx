@@ -6,9 +6,23 @@ import Link from "next/link";
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#FEFBEE] text-gray-800">
+    <div className="min-h-screen bg-[#FEFBEE] text-gray-800 relative overflow-hidden">
+      {/* Orqa fon rasmi */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/images/fon.png"
+          alt="Background"
+              className="w-full h-full object-cover opacity-50"
+          style={{ 
+            minHeight: '100vh',
+            transform: 'scale(1.2)',
+            transformOrigin: 'center',
+            maxHeight: '100vh'
+          }}
+        />
+      </div>
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-white border-b relative z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
                        <h1 className="text-2xl font-bold text-gray-900"></h1>
@@ -23,7 +37,7 @@ export default function TermsPage() {
       </header>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
+      <div className="container mx-auto px-4 py-12 max-w-4xl relative z-10">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-red-900 mb-8 text-center">
             Foydalanish shartlari

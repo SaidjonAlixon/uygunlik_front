@@ -140,9 +140,23 @@ export default function CoursePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+      {/* Orqa fon rasmi */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/images/fon.png"
+          alt="Background"
+              className="w-full h-full object-cover opacity-50"
+          style={{ 
+            minHeight: '100vh',
+            transform: 'scale(1.2)',
+            transformOrigin: 'center',
+            maxHeight: '100vh'
+          }}
+        />
+      </div>
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-white border-b relative z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center space-x-2">
             <Heart className="h-8 w-8 text-red-600" />
@@ -161,7 +175,7 @@ export default function CoursePage() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3">

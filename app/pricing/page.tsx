@@ -17,7 +17,21 @@ export default function PricingPage() {
   const { user } = useUserStore();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white relative overflow-hidden">
+      {/* Orqa fon rasmi */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/images/fon.png"
+          alt="Background"
+              className="w-full h-full object-cover opacity-50"
+          style={{ 
+            minHeight: '100vh',
+            transform: 'scale(1.2)',
+            transformOrigin: 'center',
+            maxHeight: '100vh'
+          }}
+        />
+      </div>
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -56,7 +70,7 @@ export default function PricingPage() {
       </header>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-16 px-4">
+      <section id="pricing" className="py-16 px-4 relative z-10">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -321,7 +335,7 @@ export default function PricingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 relative z-10">
         <div className="container mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -352,7 +366,7 @@ export default function PricingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 mt-16">
+      <footer className="bg-gray-900 text-white py-12 px-4 mt-16 relative z-10">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8">
             <div>

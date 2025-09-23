@@ -69,8 +69,22 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Orqa fon rasmi */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/images/fon.png"
+          alt="Background"
+              className="w-full h-full object-cover opacity-50"
+          style={{ 
+            minHeight: '100vh',
+            transform: 'scale(1.2)',
+            transformOrigin: 'center',
+            maxHeight: '100vh'
+          }}
+        />
+      </div>
+      <div className="w-full max-w-md relative z-10">
         <Card>
           <CardContent className="p-4">
             <CardHeader>

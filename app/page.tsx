@@ -677,11 +677,19 @@ export default function HomePage() {
                     }}
                   />
 
-                  {/* Oq nuqtalar (N, E, S, W) */}
-                  <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
-                  <span className="absolute bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
-                  <span className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white" />
-                  <span className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white" />
+                  {/* Aylanib turadigan nuqtalar */}
+                  <div className="absolute inset-0 animate-spin" style={{ animationDuration: '8s' }}>
+                    <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
+                  </div>
+                  <div className="absolute inset-0 animate-spin" style={{ animationDelay: '2s', animationDuration: '8s' }}>
+                    <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
+                  </div>
+                  <div className="absolute inset-0 animate-spin" style={{ animationDelay: '4s', animationDuration: '8s' }}>
+                    <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
+                  </div>
+                  <div className="absolute inset-0 animate-spin" style={{ animationDelay: '6s', animationDuration: '8s' }}>
+                    <span className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-white" />
+                  </div>
 
                   {/* Markaziy sarlavha */}
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -707,10 +715,24 @@ export default function HomePage() {
         </section>
 
         {/* kurslar kimlar uchun */}
-        <section className="py-16 px-4">
-          <div className="container mx-auto">
+        <section className="py-0 px-4 relative min-h-screen overflow-hidden">
+          {/* Orqa fon rasmi */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/images/fon.png"
+              alt="Background"
+              className="w-full h-full object-cover opacity-80"
+              style={{ 
+                minHeight: '100vh',
+                transform: 'scale(1.2)',
+                transformOrigin: 'center',
+                maxHeight: '100vh'
+              }}
+            />
+          </div>
+          <div className="container mx-auto relative z-10 py-16">
             <motion.h2
-              className="text-3xl font-bold text-center mb-12 text-red-900"
+              className="text-3xl font-bold text-center mb-6 text-red-900"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -719,7 +741,7 @@ export default function HomePage() {
               KURS KIMLAR UCHUN?
             </motion.h2>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-4">
               {/* 1. Doimiy xavotirda yashaydigan ayollar */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -973,8 +995,22 @@ export default function HomePage() {
         </section> */}
 
         {/* --- Course Content Section --- */}
-        <section id="courses" className="py-16 px-4">
-          <div className="container mx-auto">
+        <section id="courses" className="py-0 px-4 relative overflow-hidden">
+          {/* Orqa fon rasmi */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/images/fon.png"
+              alt="Background"
+              className="w-full h-full object-cover opacity-80"
+              style={{ 
+                minHeight: '100vh',
+                transform: 'scale(1.2)',
+                transformOrigin: 'center',
+                maxHeight: '100vh'
+              }}
+            />
+          </div>
+          <div className="container mx-auto relative z-10 py-16">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
               initial={{ opacity: 0, y: 20 }}
@@ -1294,8 +1330,22 @@ export default function HomePage() {
         </section>
 
         {/* Ilmiy Asoslangan Samaradorlik */}
-        <section className="py-16 px-4">
-          <div className="container mx-auto">
+        <section className="py-0 px-4 relative overflow-hidden">
+          {/* Orqa fon rasmi */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/images/fon.png"
+              alt="Background"
+              className="w-full h-full object-cover opacity-80"
+              style={{ 
+                minHeight: '100vh',
+                transform: 'scale(1.2)',
+                transformOrigin: 'center',
+                maxHeight: '100vh'
+              }}
+            />
+          </div>
+          <div className="container mx-auto relative z-10 py-16">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
               initial={{ opacity: 0, y: 20 }}
@@ -1457,8 +1507,22 @@ export default function HomePage() {
         </section>
 
         {/* Kurs Muallifi */}
-        <section id="author" className="py-16 px-4">
-          <div className="container mx-auto">
+        <section id="author" className="py-0 px-4 relative overflow-hidden">
+          {/* Orqa fon rasmi */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/images/fon.png"
+              alt="Background"
+              className="w-full h-full object-cover opacity-80"
+              style={{ 
+                minHeight: '100vh',
+                transform: 'scale(1.2)',
+                transformOrigin: 'center',
+                maxHeight: '100vh'
+              }}
+            />
+          </div>
+          <div className="container mx-auto relative z-10 py-16">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
               initial={{ opacity: 0, y: 20 }}
@@ -1527,8 +1591,22 @@ export default function HomePage() {
         </section>
 
         {/* --- FAQ Section --- */}
-        <section className="py-20 sm:py-28">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-0 relative overflow-hidden">
+          {/* Orqa fon rasmi */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/images/fon.png"
+              alt="Background"
+              className="w-full h-full object-cover opacity-80"
+              style={{ 
+                minHeight: '100vh',
+                transform: 'scale(1.2)',
+                transformOrigin: 'center',
+                maxHeight: '100vh'
+              }}
+            />
+          </div>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
             <motion.div
               className="text-center mb-16"
               initial={{ opacity: 0, y: 20 }}
@@ -1548,8 +1626,22 @@ export default function HomePage() {
         </section>
 
         {/* Sharhlar */}
-        <section id="reviews" className="py-16 px-4">
-          <div className="container mx-auto">
+        <section id="reviews" className="py-0 px-4 relative overflow-hidden">
+          {/* Orqa fon rasmi */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/images/fon.png"
+              alt="Background"
+              className="w-full h-full object-cover opacity-80"
+              style={{ 
+                minHeight: '100vh',
+                transform: 'scale(1.2)',
+                transformOrigin: 'center',
+                maxHeight: '100vh'
+              }}
+            />
+          </div>
+          <div className="container mx-auto relative z-10 py-16">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
               initial={{ opacity: 0, y: 20 }}
@@ -1565,8 +1657,22 @@ export default function HomePage() {
         </section>
 
         {/* --- Pricing Section --- */}
-        <section id="pricing" className="py-20 sm:py-28">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="pricing" className="py-0 relative overflow-hidden">
+          {/* Orqa fon rasmi */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/images/fon.png"
+              alt="Background"
+              className="w-full h-full object-cover opacity-80"
+              style={{ 
+                minHeight: '100vh',
+                transform: 'scale(1.2)',
+                transformOrigin: 'center',
+                maxHeight: '100vh'
+              }}
+            />
+          </div>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
             <motion.div
               className="text-center mb-16"
               initial={{ opacity: 0, y: 20 }}
@@ -1847,8 +1953,22 @@ export default function HomePage() {
         </section>
 
         {/* --- CTA Section --- */}
-        <section className="py-20 sm:py-28 bg-[#FEFBEE] text-red-900">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-0 bg-[#FEFBEE] text-red-900 relative overflow-hidden">
+          {/* Orqa fon rasmi */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="/images/fon.png"
+              alt="Background"
+              className="w-full h-full object-cover opacity-80"
+              style={{ 
+                minHeight: '100vh',
+                transform: 'scale(1.2)',
+                transformOrigin: 'center',
+                maxHeight: '100vh'
+              }}
+            />
+          </div>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1863,7 +1983,7 @@ export default function HomePage() {
               <div className="max-w-4xl mx-auto mb-8">
                 <div className="text-center text-lg text-red-900 leading-relaxed">
                   <p className="mb-8">
-                    O'zingizni anglash yo'lida yo'lboshchilik, Sizni tushunuvchi, qo'llab-quvvatlovchi yo'ldoshlikni, <p/>Tinglash, <p/>O'z yo'lingizni hurmat qilishni taklif qilaman.
+                    O'zingizni anglash yo'lida yo'lboshchilik, Sizni tushunuvchi, qo'llab-quvvatlovchi yo'ldoshlikni, <br/>Tinglash, <br/>O'z yo'lingizni hurmat qilishni taklif qilaman.
                   </p>
                 </div>
                 
@@ -1877,7 +1997,7 @@ export default function HomePage() {
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="mt-8"
+                className="mt-16"
               >
                 <Link href="/auth">
                   <Button
