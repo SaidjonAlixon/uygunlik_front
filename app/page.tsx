@@ -1996,8 +1996,8 @@ export default function HomePage() {
 
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="mt-16"
+                whileTap={{ scale: 0.90 }}
+                className="mt-8 mb-20"
               >
                 <Link href="/auth">
                   <Button
