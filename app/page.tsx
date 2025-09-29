@@ -331,7 +331,7 @@ const ReviewsCarousel = () => {
             <div key={index} className="w-full flex-shrink-0 px-4">
               <div className="bg-white p-6 rounded-lg shadow-md border border-red-100 text-center min-h-[350px] flex flex-col">
                 <div className="flex items-center justify-center mb-6">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden mr-4 flex items-center justify-center">
+                  <div className="w-20 h-20 bg-gray-200 rounded-full overflow-hidden mr-4 flex items-center justify-center">
                     <img
                       className="w-full h-full object-cover"
                       src={`/images/sharh/${index + 1}.jpg`}
@@ -745,7 +745,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80 hidden md:block"
+              className="w-full h-full opacity-70 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -757,12 +757,12 @@ export default function HomePage() {
             />
             {/* Mobil qurilmalar uchun alohida fon */}
             <div
-              className="w-full h-full opacity-80 md:hidden"
+              className="w-full h-full opacity-60 md:hidden"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'scroll'
               }}
@@ -795,7 +795,7 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                      <div className="w-32 h-32 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                         <img 
                           src="/images/icons/women-group.png" 
                           alt="Doimiy xavotirda yashaydigan ayollar"
@@ -811,7 +811,7 @@ export default function HomePage() {
                         <Users className="h-12 w-12 text-red-800 hidden" />
                       </div>
                     </div>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 mb-4 text-center font-bold">
                       Tabiiy yo'llar bilan homiladorlikdan saqlanishni
                       xohlaysiz, lekin zararli kontrasepsiya vositalaridan
                       foydalanishdan qo'rqasizmi? Simptotermal metod (STM)
@@ -867,7 +867,7 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                      <div className="w-32 h-32 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                         <img 
                           src="/images/icons/pregnancy-heart.png" 
                           alt="Homilador bo'lishni xohlayotgan ayollar"
@@ -883,7 +883,7 @@ export default function HomePage() {
                         <Heart className="h-12 w-12 text-red-800 hidden" />
                       </div>
                     </div>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 mb-4 text-center font-bold">
                       Agar sizga aniq bepushtlik tashxisi qo'yilmagan bo'lsa,
                       STM orqali tabiiy usulda farzandli bo'lish imkoniyatini
                       oshirishingiz mumkin:
@@ -931,7 +931,7 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
+                      <div className="w-32 h-32 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4 overflow-hidden">
                         <img 
                           src="/images/icons/mother-baby.png" 
                           alt="Yaqinda ona bo'lgan ayollar"
@@ -947,7 +947,7 @@ export default function HomePage() {
                         <Award className="h-12 w-12 text-red-800 hidden" />
                       </div>
                     </div>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 mb-4 text-center font-bold">
                       Ko'plab emizikli onalar «emizish homiladorlikdan saqlaydi»
                       degan noto'g'ri tushunchaga ega. STM yordamida siz:
                     </p>
@@ -1011,7 +1011,7 @@ export default function HomePage() {
                 >
                   <Card className="text-center border-red-100/70 h-full hover:shadow-xl hover:-translate-y-2 transition-all duration-300 bg-white/50">
                     <CardHeader>
-                      <div className="mx-auto w-16 h-16 mb-4 bg-red-100/70 rounded-full flex items-center justify-center">
+                      <div className="mx-auto w-20 h-20 mb-4 bg-red-100/70 rounded-full flex items-center justify-center">
                         <Shield className="h-8 w-8 text-red-700" />
                       </div>
                       <CardTitle className="text-xl font-semibold text-red-900">
@@ -1037,7 +1037,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80 hidden md:block"
+              className="w-full h-full opacity-70 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1049,12 +1049,12 @@ export default function HomePage() {
             />
             {/* Mobil qurilmalar uchun alohida fon */}
             <div
-              className="w-full h-full opacity-80 md:hidden"
+              className="w-full h-full opacity-60 md:hidden"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'scroll'
               }}
@@ -1082,7 +1082,7 @@ export default function HomePage() {
                 <Card className="border-red-200 h-full">
                   <CardHeader>
                     <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                      <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
                           src="/images/muallif.jpg"
                           alt="Nozima Khamraeva"
@@ -1144,7 +1144,7 @@ export default function HomePage() {
                 <Card className="border-red-200 h-full">
                   <CardHeader>
                     <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                      <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
                           src="/images/module-2.jpg"
                           alt="Sumayya Hanafi"
@@ -1211,7 +1211,7 @@ export default function HomePage() {
                 <Card className="border-red-200 h-full">
                   <CardHeader>
                     <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                      <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
                           src="/images/module-3.jpg"
                           alt="Ummu Umayr"
@@ -1280,7 +1280,7 @@ export default function HomePage() {
                 <Card className="border-red-200 h-full">
                   <CardHeader>
                     <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                      <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
                           src="/images/module-4.jpg"
                           alt="Sohiba Abdalniyozova"
@@ -1337,7 +1337,7 @@ export default function HomePage() {
                 <Card className="border-red-200 h-full">
                   <CardHeader>
                     <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                      <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
                           src="/images/module-5.jpg"
                           alt="Ruvayha"
@@ -1384,7 +1384,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80 hidden md:block"
+              className="w-full h-full opacity-70 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1396,12 +1396,12 @@ export default function HomePage() {
             />
             {/* Mobil qurilmalar uchun alohida fon */}
             <div
-              className="w-full h-full opacity-80 md:hidden"
+              className="w-full h-full opacity-60 md:hidden"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'scroll'
               }}
@@ -1573,7 +1573,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80 hidden md:block"
+              className="w-full h-full opacity-70 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1585,12 +1585,12 @@ export default function HomePage() {
             />
             {/* Mobil qurilmalar uchun alohida fon */}
             <div
-              className="w-full h-full opacity-80 md:hidden"
+              className="w-full h-full opacity-60 md:hidden"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'scroll'
               }}
@@ -1669,7 +1669,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80 hidden md:block"
+              className="w-full h-full opacity-70 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1681,12 +1681,12 @@ export default function HomePage() {
             />
             {/* Mobil qurilmalar uchun alohida fon */}
             <div
-              className="w-full h-full opacity-80 md:hidden"
+              className="w-full h-full opacity-60 md:hidden"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'scroll'
               }}
@@ -1716,7 +1716,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80 hidden md:block"
+              className="w-full h-full opacity-70 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1728,12 +1728,12 @@ export default function HomePage() {
             />
             {/* Mobil qurilmalar uchun alohida fon */}
             <div
-              className="w-full h-full opacity-80 md:hidden"
+              className="w-full h-full opacity-60 md:hidden"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'scroll'
               }}
@@ -1759,7 +1759,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80 hidden md:block"
+              className="w-full h-full opacity-70 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1771,12 +1771,12 @@ export default function HomePage() {
             />
             {/* Mobil qurilmalar uchun alohida fon */}
             <div
-              className="w-full h-full opacity-80 md:hidden"
+              className="w-full h-full opacity-60 md:hidden"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'scroll'
               }}
@@ -2067,7 +2067,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80 hidden md:block"
+              className="w-full h-full opacity-70 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -2079,12 +2079,12 @@ export default function HomePage() {
             />
             {/* Mobil qurilmalar uchun alohida fon */}
             <div
-              className="w-full h-full opacity-80 md:hidden"
+              className="w-full h-full opacity-60 md:hidden"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
-                backgroundSize: 'contain',
-                backgroundPosition: 'center top',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'scroll'
               }}

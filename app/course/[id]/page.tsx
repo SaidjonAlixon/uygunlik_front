@@ -382,7 +382,7 @@ export default function CoursePage() {
                     >
                       <div className="flex items-center space-x-3">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                          className={`w-10 h-10 rounded-full flex items-center justify-center ${
                             lesson.completed
                               ? "bg-green-600 text-white"
                               : lesson.current
