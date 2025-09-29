@@ -745,7 +745,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80"
+              className="w-full h-full opacity-80 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -753,6 +753,18 @@ export default function HomePage() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'fixed'
+              }}
+            />
+            {/* Mobil qurilmalar uchun alohida fon */}
+            <div
+              className="w-full h-full opacity-80 md:hidden"
+              style={{ 
+                minHeight: '100vh',
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll'
               }}
             />
           </div>
@@ -1025,7 +1037,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80"
+              className="w-full h-full opacity-80 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1033,6 +1045,18 @@ export default function HomePage() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'fixed'
+              }}
+            />
+            {/* Mobil qurilmalar uchun alohida fon */}
+            <div
+              className="w-full h-full opacity-80 md:hidden"
+              style={{ 
+                minHeight: '100vh',
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll'
               }}
             />
           </div>
@@ -1360,7 +1384,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80"
+              className="w-full h-full opacity-80 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1368,6 +1392,18 @@ export default function HomePage() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'fixed'
+              }}
+            />
+            {/* Mobil qurilmalar uchun alohida fon */}
+            <div
+              className="w-full h-full opacity-80 md:hidden"
+              style={{ 
+                minHeight: '100vh',
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll'
               }}
             />
           </div>
@@ -1537,7 +1573,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80"
+              className="w-full h-full opacity-80 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1545,6 +1581,18 @@ export default function HomePage() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'fixed'
+              }}
+            />
+            {/* Mobil qurilmalar uchun alohida fon */}
+            <div
+              className="w-full h-full opacity-80 md:hidden"
+              style={{ 
+                minHeight: '100vh',
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll'
               }}
             />
           </div>
@@ -1621,7 +1669,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80"
+              className="w-full h-full opacity-80 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1629,6 +1677,18 @@ export default function HomePage() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'fixed'
+              }}
+            />
+            {/* Mobil qurilmalar uchun alohida fon */}
+            <div
+              className="w-full h-full opacity-80 md:hidden"
+              style={{ 
+                minHeight: '100vh',
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll'
               }}
             />
           </div>
@@ -1656,7 +1716,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80"
+              className="w-full h-full opacity-80 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1664,6 +1724,18 @@ export default function HomePage() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'fixed'
+              }}
+            />
+            {/* Mobil qurilmalar uchun alohida fon */}
+            <div
+              className="w-full h-full opacity-80 md:hidden"
+              style={{ 
+                minHeight: '100vh',
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll'
               }}
             />
           </div>
@@ -1687,7 +1759,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80"
+              className="w-full h-full opacity-80 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1695,6 +1767,18 @@ export default function HomePage() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'fixed'
+              }}
+            />
+            {/* Mobil qurilmalar uchun alohida fon */}
+            <div
+              className="w-full h-full opacity-80 md:hidden"
+              style={{ 
+                minHeight: '100vh',
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll'
               }}
             />
           </div>
@@ -1983,7 +2067,7 @@ export default function HomePage() {
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
             <div
-              className="w-full h-full opacity-80"
+              className="w-full h-full opacity-80 hidden md:block"
               style={{ 
                 minHeight: '100vh',
                 backgroundImage: 'url(/images/fon.png)',
@@ -1991,6 +2075,18 @@ export default function HomePage() {
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 backgroundAttachment: 'fixed'
+              }}
+            />
+            {/* Mobil qurilmalar uchun alohida fon */}
+            <div
+              className="w-full h-full opacity-80 md:hidden"
+              style={{ 
+                minHeight: '100vh',
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'contain',
+                backgroundPosition: 'center top',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'scroll'
               }}
             />
           </div>
