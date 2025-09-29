@@ -67,9 +67,9 @@ export default function TermsPage() {
                 taqdim etadi. Platforma quyidagi xizmatlarni o'z ichiga oladi:
               </p>
               <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
-                <li>Simptotermal Metod (STM) bo'yicha onlayn kurslar</li>
+                <li>Simptotermal Metod (STM) bo'yicha onlayn kurs</li>
                 <li>Video darslar va o'quv materiallari</li>
-                <li>Mutaxassislar bilan maslahat olish imkoniyati</li>
+                <li>Mutaxassislardan maslahat olish imkoniyati</li>
                 <li>Jamiyat va qo'llab-quvvatlash guruhi</li>
                 <li>Shaxsiy kuzatuv jurnallari</li>
               </ul>
@@ -85,6 +85,7 @@ export default function TermsPage() {
                 <li>Platforma xavfsizligini buzmaslik</li>
                 <li>Boshqa foydalanuvchilarga nisbatan hurmatli munosabatda bo'lish</li>
                 <li>Mualliflik huquqlarini buzmaslik</li>
+                <li>Video darsliklarni ko'chirish, ekrandan yozib olish qat'iyan man etiladi</li>
                 <li>Platforma qoidalariga amal qilish</li>
               </ul>
             </section>
@@ -119,7 +120,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-red-800 mb-4">6. Shartlarni o'zgartirish</h2>
               <p className="text-gray-700 mb-4">
-                Biz ushbu shartlarni istalgan vaqtda o'zgartirish huquqini o'z zimamizga olamiz. 
+                Biz ushbu shartlarni istalgan vaqtda o'zgartirish huquqini o'z zimmamizga olamiz. 
                 O'zgarishlar platformada e'lon qilinadi va darhol kuchga kiradi.
               </p>
             </section>

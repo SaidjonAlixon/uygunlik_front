@@ -40,7 +40,7 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onComplete();
-    }, 3000); // 3 soniya loading
+    }, 1000); // 1 soniya loading - tezroq yuklash
 
     return () => clearTimeout(timer);
   }, [onComplete]);
@@ -56,7 +56,7 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
         initial={{ scale: 0.5, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ 
-          duration: 1,
+          duration: 0.5,
           ease: "easeOut"
         }}
         className="text-center"
@@ -68,18 +68,18 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
           initial={{ y: -20 }}
           animate={{ y: 0 }}
           transition={{ 
-            duration: 0.8,
-            delay: 0.2,
+            duration: 0.4,
+            delay: 0.1,
             ease: "easeOut"
           }}
         />
         <motion.h1
-          className="font-dancing text-2xl md:text-4xl text-[#5D1111] mb-4"
+          className="font-serif text-3xl md:text-5xl text-[#5D1111] mb-4 font-bold tracking-wide"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ 
-            duration: 0.8,
-            delay: 0.5,
+            duration: 0.4,
+            delay: 0.2,
             ease: "easeOut"
           }}
         >
@@ -90,8 +90,8 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ 
-            duration: 0.5,
-            delay: 1,
+            duration: 0.3,
+            delay: 0.3,
             ease: "easeOut"
           }}
         >
@@ -284,24 +284,22 @@ const ReviewsCarousel = () => {
   };
 
   const getDisplayText = (text: string, index: number) => {
-    // Asiya Ameen (index 0), Dildora Baxtiyorovna (index 1), Elnora Rustamova (index 2), Xadicha Jo'rayeva (index 3), Robiya Muhammedova (index 4), Ummu Muhsin (index 5), Muhammad's wife (index 6), and Aisha Shoakmalova (index 7) should be expandable
-    if (index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 6 || index === 7) {
-      const isExpanded = expandedReviews.has(index);
+    const isExpanded = expandedReviews.has(index);
+    
+    if (isExpanded) {
+      // To'liq matn ko'rsatish
+      return text;
+    } else {
+      // Faqat 4 qator ko'rsatish
+      const words = text.split(' ');
+      const wordsPerLine = 8; // Har qatorda taxminan 8 so'z
+      const maxWords = wordsPerLine * 4; // 4 qator uchun 32 so'z
       
-      if (isExpanded) {
-        return text;
-      } else {
-        // Elnora Rustamova (index 2) uchun ancha qisqa ko'rsatish
-        if (index === 2) {
-          const veryShortLength = Math.floor(text.length / 4); // 1/4 qismini ko'rsatish
-          return text.substring(0, veryShortLength) + "...";
-        } else {
-          const shortLength = Math.floor(text.length / 3); // Boshqalar uchun 1/3 qismini ko'rsatish
-          return text.substring(0, shortLength) + "...";
-        }
+      if (words.length > maxWords) {
+        return words.slice(0, maxWords).join(' ') + "...";
       }
+      return text;
     }
-    return text;
   };
 
   return (
@@ -331,7 +329,7 @@ const ReviewsCarousel = () => {
         >
           {reviews.map((review, index) => (
             <div key={index} className="w-full flex-shrink-0 px-4">
-              <div className="bg-white p-8 rounded-lg shadow-md border border-red-100 text-center">
+              <div className="bg-white p-6 rounded-lg shadow-md border border-red-100 text-center min-h-[350px] flex flex-col">
                 <div className="flex items-center justify-center mb-6">
                   <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden mr-4 flex items-center justify-center">
                     <img
@@ -347,17 +345,21 @@ const ReviewsCarousel = () => {
                     <p className="text-sm text-gray-600">{review.handle}</p>
                   </div>
                 </div>
-                <div className="text-gray-700 leading-relaxed text-lg">
-                  <p className="mb-2">
-                    "{getDisplayText(review.text, index)}"
-                  </p>
-                  {(index === 0 || index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 6 || index === 7) && (
-                    <button
-                      onClick={() => toggleExpanded(index)}
-                      className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors duration-200"
-                    >
-                      {expandedReviews.has(index) ? "Kamroq ko'rsatish" : "To'liq o'qish"}
-                    </button>
+                <div className="text-gray-700 leading-relaxed text-lg flex-1 flex flex-col">
+                  <div className="mb-2 flex-1 overflow-y-auto">
+                    <p>
+                      "{getDisplayText(review.text, index)}"
+                    </p>
+                  </div>
+                  {review.text.split(' ').length > 32 && (
+                    <div className="mt-4 flex-shrink-0">
+                      <button
+                        onClick={() => toggleExpanded(index)}
+                        className="text-red-600 hover:text-red-800 font-medium text-sm transition-colors duration-200 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-full border border-red-200"
+                      >
+                        {expandedReviews.has(index) ? "Qisqartish" : "To'liq o'qish"}
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -560,7 +562,7 @@ export default function HomePage() {
                 />
               </motion.div>{" "}
               <motion.h1
-                className="font-dancing text-xl sm:text-3xl md:text-5xl relative z-50"
+                className="font-serif text-xl sm:text-3xl md:text-5xl relative z-50"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ 
                   opacity: showMainContent ? 1 : 0, 
@@ -571,13 +573,13 @@ export default function HomePage() {
                 Ayollik tabiatingiz bilan hamohanglikda yashang
               </motion.h1>
               <motion.p
-                className="mx-auto text-sm sm:text-lg font-bold md:text-xl mb-3 relative z-50"
+                className="mx-auto text-base sm:text-xl md:text-2xl font-semibold italic text-[#7A2E2E] mb-4 relative z-40"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ 
                   opacity: showMainContent ? 1 : 0, 
                   y: showMainContent ? 0 : 20 
                 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
               >
                 Tabiiy usul bilan homiladorlikni<br />
                 rejalashtiring yoki oldini oling
@@ -632,17 +634,17 @@ export default function HomePage() {
                 scale: showMainContent ? 1 : 0.8 
               }}
               transition={{ duration: 0.8, delay: 1.5 }}
-              className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-50"
-              style={{ marginLeft: '-48px' }}
+              className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-50"
+              style={{ marginLeft: '-40px' }}
             >
               <Link
                 href={"#pricing"}
-                className="h-40 w-40 border rounded-full flex items-center justify-center text-white hover:scale-105 transition-transform duration-300"
+                className="h-32 w-32 border rounded-full flex items-center justify-center text-white hover:scale-105 transition-transform duration-300"
               >
-                <p className="text-xl text-center">
+                <p className="text-lg text-center">
                   ISHTIROK <br /> ETAMAN
                 </p>
-                <span className="h-4 w-4 bg-white rounded-full right-4 bottom-4 absolute"></span>
+                <span className="h-3 w-3 bg-white rounded-full right-3 bottom-3 absolute"></span>
               </Link>
             </motion.div>
             <div className="absolute z-10 bottom-0 h-[300px] md:h-[400px] w-full left-0 bg-gradient-to-t from-red-900 from-20% to-transparent"></div>
@@ -650,9 +652,9 @@ export default function HomePage() {
         </motion.section>
 
         {/* STM BU bo'limi */}
-        <section className="py-20 px-4 bg-[#801d1d] min-h-screen flex items-center">
+        <section className="py-20 px-4 min-h-screen flex items-center" style={{ backgroundColor: '#801d1d', backgroundImage: 'none', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundClip: 'padding-box', zIndex: 1, position: 'relative', overflow: 'hidden' }}>
           <div className="container mx-auto">
-            <div className="min-h-screen w-full bg-[#801d1d] text-white flex items-center justify-center p-5">
+            <div className="min-h-screen w-full text-white flex items-center justify-center p-5" style={{ backgroundColor: '#801d1d', backgroundImage: 'none', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', backgroundClip: 'padding-box', zIndex: 2, position: 'relative', overflow: 'hidden' }}>
               <div className="w-full max-w-sm mx-auto">
                 {/* Yuqoridagi 2 ta matn */}
                 <div className="grid grid-cols-2 gap-5 text-center text-base leading-relaxed mb-6">
@@ -730,7 +732,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Slogan */}
-                <p className="mt-8 text-center italic text-xl font-bold text-white/95">
+                <p className="mt-8 text-center italic text-xl font-serif font-bold text-white/95">
                   Bu – tanangiz bilan hamohanglikda yashash san'ati.
                 </p>
               </div>
@@ -739,18 +741,18 @@ export default function HomePage() {
         </section>
 
         {/* kurslar kimlar uchun */}
-        <section className="py-0 px-4 relative min-h-screen overflow-hidden">
+        <section className="py-0 px-4 relative min-h-screen overflow-hidden -mt-8" style={{ marginTop: '-2rem' }}>
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
-            <img
-              src="/images/fon.png"
-              alt="Background"
-              className="w-full h-full object-cover opacity-80"
+            <div
+              className="w-full h-full opacity-80"
               style={{ 
                 minHeight: '100vh',
-                transform: 'scale(1.2)',
-                transformOrigin: 'center',
-                maxHeight: '100vh'
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
               }}
             />
           </div>
@@ -978,7 +980,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-red-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-red-900 mb-4">
                 Nima uchun bizni tanlaysiz?
               </h2>
               <p className="max-w-3xl mx-auto text-lg text-gray-600">
@@ -1019,18 +1021,18 @@ export default function HomePage() {
         </section> */}
 
         {/* --- Course Content Section --- */}
-        <section id="courses" className="py-0 px-4 relative overflow-hidden -mb-8">
+        <section id="courses" className="py-0 px-4 relative overflow-hidden -mt-8" style={{ marginTop: '-2rem' }}>
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
-            <img
-              src="/images/fon.png"
-              alt="Background"
-              className="w-full h-full object-cover opacity-80"
+            <div
+              className="w-full h-full opacity-80"
               style={{ 
                 minHeight: '100vh',
-                transform: 'scale(1.2)',
-                transformOrigin: 'center',
-                maxHeight: '100vh'
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
               }}
             />
           </div>
@@ -1354,18 +1356,18 @@ export default function HomePage() {
         </section>
 
         {/* Ilmiy Asoslangan Samaradorlik */}
-        <section className="py-0 px-4 relative overflow-hidden -mt-8">
+        <section className="py-0 px-4 relative overflow-hidden -mt-8" style={{ marginTop: '-2rem' }}>
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
-            <img
-              src="/images/fon.png"
-              alt="Background"
-              className="w-full h-full object-cover opacity-80"
+            <div
+              className="w-full h-full opacity-80"
               style={{ 
                 minHeight: '100vh',
-                transform: 'scale(1.2)',
-                transformOrigin: 'center',
-                maxHeight: '100vh'
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
               }}
             />
           </div>
@@ -1531,18 +1533,18 @@ export default function HomePage() {
         </section>
 
         {/* Kurs Muallifi */}
-        <section id="author" className="py-0 px-4 relative overflow-hidden">
+        <section id="author" className="py-0 px-4 relative overflow-hidden -mt-8">
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
-            <img
-              src="/images/fon.png"
-              alt="Background"
-              className="w-full h-full object-cover opacity-80"
+            <div
+              className="w-full h-full opacity-80"
               style={{ 
                 minHeight: '100vh',
-                transform: 'scale(1.2)',
-                transformOrigin: 'center',
-                maxHeight: '100vh'
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
               }}
             />
           </div>
@@ -1577,7 +1579,7 @@ export default function HomePage() {
                   <h3 className="text-2xl font-bold text-red-900 mb-2">
                     Kurs muallifi
                   </h3>
-                  <h4 className="text-3xl font-bold text-red-800 mb-6">
+                  <h4 className="text-3xl font-serif font-bold text-red-800 mb-6">
                     Nozima Khamraeva
                   </h4>
                 </div>
@@ -1615,18 +1617,18 @@ export default function HomePage() {
         </section>
 
         {/* --- FAQ Section --- */}
-        <section className="py-0 relative overflow-hidden">
+        <section className="py-0 relative overflow-hidden -mt-8" style={{ marginTop: '-2rem' }}>
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
-            <img
-              src="/images/fon.png"
-              alt="Background"
-              className="w-full h-full object-cover opacity-80"
+            <div
+              className="w-full h-full opacity-80"
               style={{ 
                 minHeight: '100vh',
-                transform: 'scale(1.2)',
-                transformOrigin: 'center',
-                maxHeight: '100vh'
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
               }}
             />
           </div>
@@ -1638,7 +1640,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-red-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-red-900 mb-4">
                 Ko'p beriladigan savollar
               </h2>
               <p className="max-w-3xl mx-auto text-lg text-gray-600">
@@ -1650,18 +1652,18 @@ export default function HomePage() {
         </section>
 
         {/* Sharhlar */}
-        <section id="reviews" className="py-0 px-4 relative overflow-hidden">
+        <section id="reviews" className="py-0 px-4 relative overflow-hidden -mt-8">
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
-            <img
-              src="/images/fon.png"
-              alt="Background"
-              className="w-full h-full object-cover opacity-80"
+            <div
+              className="w-full h-full opacity-80"
               style={{ 
                 minHeight: '100vh',
-                transform: 'scale(1.2)',
-                transformOrigin: 'center',
-                maxHeight: '100vh'
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
               }}
             />
           </div>
@@ -1681,18 +1683,18 @@ export default function HomePage() {
         </section>
 
         {/* --- Pricing Section --- */}
-        <section id="pricing" className="py-0 relative overflow-hidden">
+        <section id="pricing" className="py-0 relative overflow-hidden -mt-8">
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
-            <img
-              src="/images/fon.png"
-              alt="Background"
-              className="w-full h-full object-cover opacity-80"
+            <div
+              className="w-full h-full opacity-80"
               style={{ 
                 minHeight: '100vh',
-                transform: 'scale(1.2)',
-                transformOrigin: 'center',
-                maxHeight: '100vh'
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
               }}
             />
           </div>
@@ -1704,7 +1706,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-red-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold text-red-900 mb-4">
                 Tariflar
               </h2>
               <p className="max-w-3xl mx-auto text-lg text-gray-600">
@@ -1977,18 +1979,18 @@ export default function HomePage() {
         </section>
 
         {/* --- CTA Section --- */}
-        <section className="py-0 bg-[#FEFBEE] text-red-900 relative overflow-hidden">
+        <section className="py-0 bg-[#FEFBEE] text-red-900 relative overflow-hidden -mt-8" style={{ marginTop: '-2rem' }}>
           {/* Orqa fon rasmi */}
           <div className="absolute inset-0 z-0">
-            <img
-              src="/images/fon.png"
-              alt="Background"
-              className="w-full h-full object-cover opacity-80"
+            <div
+              className="w-full h-full opacity-80"
               style={{ 
                 minHeight: '100vh',
-                transform: 'scale(1.2)',
-                transformOrigin: 'center',
-                maxHeight: '100vh'
+                backgroundImage: 'url(/images/fon.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundAttachment: 'fixed'
               }}
             />
           </div>
@@ -2000,7 +2002,7 @@ export default function HomePage() {
               transition={{ duration: 0.8 }}
               className="text-center"
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-8 text-red-900">
+              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-8 text-red-900">
                 SIZGA MO'JIZA TAKLIF QILMAYMAN
               </h2>
               
@@ -2012,7 +2014,7 @@ export default function HomePage() {
                 </div>
                 
                 <div className="text-center">
-                  <p className="text-red-1000 italic font-serif text-xl">
+                  <p className="text-red-1000 italic font-serif text-xl font-bold">
                     (C) Nozima Khamraeva
                   </p>
                 </div>
