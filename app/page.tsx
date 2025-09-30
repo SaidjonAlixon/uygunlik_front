@@ -734,7 +734,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Slogan */}
-                <p className="mt-8 text-center italic text-xl font-serif font-bold text-white/95">
+                <p className="mt-8 text-center text-xl font-bold text-white/95" style={{ fontFamily: 'Bergstena Script, cursive' }}>
                   Bu – tanangiz bilan hamohanglikda yashash san'ati.
                 </p>
               </div>
