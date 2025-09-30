@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Bergstena Decorated';
+  src: url('/BergstenaDecorated_PERSONAL_USE_ONLY.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

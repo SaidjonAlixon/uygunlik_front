@@ -74,7 +74,8 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
           }}
         />
         <motion.h1
-          className="font-serif text-3xl md:text-5xl text-[#5D1111] mb-4 font-bold tracking-wide"
+          className="text-3xl md:text-5xl text-[#5D1111] mb-4 font-bold tracking-wide"
+          style={{ fontFamily: 'Bergstena Decorated, serif' }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ 
@@ -562,7 +563,8 @@ export default function HomePage() {
                 />
               </motion.div>{" "}
               <motion.h1
-                className="font-serif text-xl sm:text-3xl md:text-5xl relative z-50"
+                className="text-xl sm:text-3xl md:text-5xl relative z-50"
+                style={{ fontFamily: 'Bergstena Decorated, serif' }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ 
                   opacity: showMainContent ? 1 : 0, 
