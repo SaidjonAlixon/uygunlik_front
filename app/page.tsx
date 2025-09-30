@@ -480,7 +480,7 @@ export default function HomePage() {
                   href={"/register"}
                   className="text-2xl hover:underline underline-offset-4 text-left"
                 >
-                  Ro'yhatdan o'tish
+                  Ro'yxatdan o'tish
                 </Link>
               </SheetClose>
             </nav>
