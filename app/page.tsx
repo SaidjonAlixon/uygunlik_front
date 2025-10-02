@@ -575,7 +575,7 @@ export default function HomePage() {
                 Ayollik tabiatingiz bilan hamohanglikda yashang
               </motion.h1>
               <motion.p
-                className="mx-auto text-base sm:text-xl md:text-2xl font-semibold italic text-[#7A2E2E] mb-4 relative z-40"
+                className="mx-auto text-base sm:text-xl md:text-2xl font-semibold text-[#7A2E2E] mb-4 relative z-40"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ 
                   opacity: showMainContent ? 1 : 0, 
@@ -637,7 +637,7 @@ export default function HomePage() {
               }}
               transition={{ duration: 0.8, delay: 1.5 }}
               className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-50"
-              style={{ marginLeft: '-40px' }}
+              style={{ marginLeft: '-80px' }}
             >
               <Link
                 href={"#pricing"}
