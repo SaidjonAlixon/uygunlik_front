@@ -1691,8 +1691,7 @@ export default function HomePage() {
                     matoli tagliklarni tanishtirgan ayol.
                   </p>
                   <p className="text-lg leading-relaxed">
-                    Uchinchi farzandini tibbiy aralashuvlarsiz, ongli yondashib
-                    uyda dunyoga keltirgan ona.
+                    2 ta farzandini tibbiy xodimlar va aralashuvlarsiz, ongli yondashib, oʻz uyida dunyoga keltirgan ona.
                   </p>
                 </div>
               </motion.div>
