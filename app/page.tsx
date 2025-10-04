@@ -37,13 +37,50 @@ import { useUserStore } from "@/store/user.store";
 
 // Loading Screen Component
 const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onComplete();
-    }, 1000); // 1 soniya loading - tezroq yuklash
+  const [showScrollHint, setShowScrollHint] = useState(false);
 
-    return () => clearTimeout(timer);
-  }, [onComplete]);
+  useEffect(() => {
+    // Darhol scroll belgisini ko'rsatish
+    setShowScrollHint(true);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Har qanday scroll harakatida loading ni tugatish
+      onComplete();
+    };
+
+    const handleWheel = () => {
+      // Mouse wheel scroll
+      onComplete();
+    };
+
+    const handleTouchMove = () => {
+      // Touch scroll (mobile)
+      onComplete();
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Klaviatura scroll (arrow keys, space, page down)
+      if (['ArrowDown', 'ArrowUp', 'Space', 'PageDown', 'PageUp'].includes(e.key)) {
+        onComplete();
+      }
+    };
+
+    if (showScrollHint) {
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('wheel', handleWheel);
+      window.addEventListener('touchmove', handleTouchMove);
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showScrollHint, onComplete]);
 
   return (
     <motion.div
@@ -73,39 +110,49 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
             ease: "easeOut"
           }}
         />
-        <motion.h1
-          className="text-3xl md:text-5xl text-[#5D1111] mb-4 font-bold tracking-wide"
-          style={{ fontFamily: 'Bergstena Decorated, serif' }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.4,
-            delay: 0.2,
-            ease: "easeOut"
-          }}
-        >
-          Ayollik tabiatingiz bilan hamohanglikda yashang
-        </motion.h1>
-        <motion.div
-          className="flex justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ 
-            duration: 0.3,
-            delay: 0.3,
-            ease: "easeOut"
-          }}
-        >
-          <motion.div
-            className="w-8 h-8 border-4 border-[#5D1111] border-t-transparent rounded-full"
-            animate={{ rotate: 360 }}
-            transition={{
-              duration: 1,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        </motion.div>
+
+        {/* Scroll qilish belgisi */}
+        <AnimatePresence>
+          {showScrollHint && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5 }}
+              className="mt-8 flex flex-col items-center text-[#5D1111]"
+            >
+              <motion.p
+                className="text-sm font-medium mb-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                Scroll qiling
+              </motion.p>
+              <motion.div
+                className="flex flex-col items-center"
+                animate={{ y: [0, 5, 0] }}
+                transition={{ 
+                  duration: 1.5, 
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <div className="w-6 h-10 border-2 border-[#5D1111] rounded-full flex justify-center">
+                  <motion.div
+                    className="w-1 h-3 bg-[#5D1111] rounded-full mt-2"
+                    animate={{ y: [0, 12, 0] }}
+                    transition={{ 
+                      duration: 1.5, 
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   );
