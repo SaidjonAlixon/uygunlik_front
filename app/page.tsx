@@ -22,6 +22,7 @@ import {
   Minus,
   Menu,
   X,
+  LogOut,
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -121,34 +122,43 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
               transition={{ duration: 0.5 }}
               className="mt-8 flex flex-col items-center text-[#5D1111]"
             >
-              <motion.p
-                className="text-sm font-medium mb-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-              >
-                Scroll qiling
-              </motion.p>
               <motion.div
-                className="flex flex-col items-center"
-                animate={{ y: [0, 5, 0] }}
+                className="flex flex-col items-center gap-2"
+                animate={{ y: [0, 8, 0] }}
                 transition={{ 
-                  duration: 1.5, 
+                  duration: 1.2, 
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
               >
-                <div className="w-6 h-10 border-2 border-[#5D1111] rounded-full flex justify-center">
-                  <motion.div
-                    className="w-1 h-3 bg-[#5D1111] rounded-full mt-2"
-                    animate={{ y: [0, 12, 0] }}
-                    transition={{ 
-                      duration: 1.5, 
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  />
-                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[#5D1111]"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[#5D1111] -mt-4"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
               </motion.div>
             </motion.div>
           )}
@@ -433,10 +443,17 @@ const ReviewsCarousel = () => {
 };
 
 export default function HomePage() {
-  const { user } = useUserStore();
+  const { user, clearUser } = useUserStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showMainContent, setShowMainContent] = useState(false);
+
+  const handleLogout = () => {
+    // Clear token
+    localStorage.removeItem('auth_token');
+    // Reload page
+    window.location.reload();
+  };
 
   // Loading completion handler
   const handleLoadingComplete = () => {
@@ -514,22 +531,45 @@ export default function HomePage() {
                   </Link>
                 </SheetClose>
               ))}
-              <SheetClose asChild>
-                <Link
-                  href={"/auth"}
-                  className="text-2xl hover:underline underline-offset-4 text-left"
-                >
-                  Kirish
-                </Link>
-              </SheetClose>
-              <SheetClose asChild>
-                <Link
-                  href={"/register"}
-                  className="text-2xl hover:underline underline-offset-4 text-left"
-                >
-                  Ro'yxatdan o'tish
-                </Link>
-              </SheetClose>
+              {user ? (
+                <>
+                  <SheetClose asChild>
+                    <Link
+                      href={"/dashboard"}
+                      className="text-2xl hover:underline underline-offset-4 text-left"
+                    >
+                      {user.first_name}
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <button
+                      onClick={handleLogout}
+                      className="text-2xl hover:underline underline-offset-4 text-left text-red-600"
+                    >
+                      Chiqish
+                    </button>
+                  </SheetClose>
+                </>
+              ) : (
+                <>
+                  <SheetClose asChild>
+                    <Link
+                      href={"/auth"}
+                      className="text-2xl hover:underline underline-offset-4 text-left"
+                    >
+                      Kirish
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      href={"/register"}
+                      className="text-2xl hover:underline underline-offset-4 text-left"
+                    >
+                      Ro'yxatdan o'tish
+                    </Link>
+                  </SheetClose>
+                </>
+              )}
             </nav>
           </SheetContent>
         </Sheet>
@@ -557,21 +597,39 @@ export default function HomePage() {
           {/* Desktop Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4 ml-10">
             {user ? (
-              <Link href="/dashboard">
+              <>
+                <Link href="/dashboard">
+                  <Button
+                    variant="outline"
+                    className="border-red-300 text-red-800 hover:bg-red-50"
+                  >
+                    {user.first_name}
+                  </Button>
+                </Link>
                 <Button
                   variant="outline"
-                  className="border-red-300 text-red-800 hover"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="text-red-600 border-red-300 hover:bg-red-50"
                 >
-                  {user.first_name}
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Chiqish
                 </Button>
-              </Link>
+              </>
             ) : (
               <>
-                <Link
-                  className="text-xl text-red-900 transition-all"
-                  href="/auth"
-                >
-                  Kirish
+                <Link href="/auth">
+                  <Button
+                    variant="outline"
+                    className="border-red-800 text-red-800 hover:bg-red-50"
+                  >
+                    Kirish
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button className="bg-red-800 hover:bg-red-900 text-white">
+                    Ro'yxatdan o'tish
+                  </Button>
                 </Link>
               </>
             )}
