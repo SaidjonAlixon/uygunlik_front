@@ -29,6 +29,7 @@ import {
   PlusCircle,
   Upload,
   Loader2,
+  LogOut,
 } from "lucide-react";
 import {
   Table,
@@ -67,9 +68,16 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function AdminPage() {
-  const { user } = useUserStore();
+  const { user, clearUser } = useUserStore();
   const router = useRouter();
   const { toast } = useToast();
+
+  const handleLogout = () => {
+    // Clear token
+    localStorage.removeItem('auth_token');
+    // Redirect to home
+    window.location.href = '/';
+  };
 
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -128,6 +136,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (user && user?.role === Role.ADMIN) {
+      console.log("Admin user detected, fetching users...");
       fetchUsers();
     }
   }, [user, usersPage, debouncedUsersSearchTerm]);
@@ -153,11 +162,13 @@ export default function AdminPage() {
   const fetchUsers = async () => {
     setUsersLoading(true);
     try {
+      console.log("Fetching users...", { usersPage, debouncedUsersSearchTerm });
       const { data, total } = await UserService.findAll(
         usersPage,
         10,
         debouncedUsersSearchTerm
       );
+      console.log("Users fetched:", { data, total });
       setUsers(data);
       setUsersTotalPages(Math.ceil(total / 10));
     } catch (error) {
@@ -179,7 +190,7 @@ export default function AdminPage() {
 
     try {
       if (selectedCourse) {
-        await CourseService.update(selectedCourse._id, courseData);
+        await CourseService.update(String(selectedCourse.id), courseData);
       } else {
         await CourseService.create(courseData);
       }
@@ -210,7 +221,7 @@ export default function AdminPage() {
       setCoursePrice(course.price);
       setCourseCategory(course.category || []);
       setCourseVideos(
-        course.videos.map((v) => (typeof v === "string" ? v : v._id))
+        course.videos.map((v) => (typeof v === "string" ? v : String(v.id)))
       );
     } else {
       resetCourseForm();
@@ -279,7 +290,7 @@ export default function AdminPage() {
         title: videoTitle,
         description: videoDescription,
       };
-      await VideoService.update(selectedVideo._id, updateVideoDto);
+      await VideoService.update(String(selectedVideo.id), updateVideoDto);
       fetchVideos();
       setIsVideoEditFormOpen(false);
       setSelectedVideo(null);
@@ -307,7 +318,7 @@ export default function AdminPage() {
 
   const handleEditUserCoursesClick = (user: User) => {
     setSelectedUser(user);
-    const currentUserCourseIds = user?.courses?.map(course => course._id) || [];
+    const currentUserCourseIds = user?.courses?.map(course => String(course.id)) || [];
     setUserCourses(currentUserCourseIds);
     setIsUserCoursesFormOpen(true);
   };
@@ -315,7 +326,7 @@ export default function AdminPage() {
   const handleUpdateUserCourses = async () => {
     if (!selectedUser) return;
     try {
-      await UserService.updateUserCourses(selectedUser?._id, userCourses);
+      await UserService.updateUserCourses(String(selectedUser?.id), userCourses);
       toast({
         title: "Muvaffaqiyatli!",
         description: `${selectedUser?.first_name}ning kurslari muvaffaqiyatli yangilandi.`,
@@ -343,9 +354,27 @@ export default function AdminPage() {
     }
   };
 
+  const handleUpdateUserRole = async (userId: string, newRole: string) => {
+    try {
+      await UserService.updateUserRole(userId, newRole);
+      toast({
+        title: "Muvaffaqiyatli!",
+        description: `Foydalanuvchi roli ${newRole === 'admin' ? 'Admin' : 'User'} ga o'zgartirildi.`,
+      });
+      fetchUsers();
+    } catch (error) {
+      console.error("Foydalanuvchi rolini yangilashda xato:", error);
+      toast({
+        title: "Xatolik!",
+        description: "Foydalanuvchi rolini yangilashda xatolik yuz berdi.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const stats = {
-    totalUsers: 0,
-    activeUsers: 0,
+    totalUsers: users.length,
+    activeUsers: users.filter(u => u.status === 'active').length,
     pendingPayments: 0,
     totalRevenue: "0 so'm",
   };
@@ -381,6 +410,10 @@ export default function AdminPage() {
             <Button variant="outline" size="sm">
               <Settings className="h-4 w-4 mr-2" />
               Sozlamalar
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleLogout} className="text-red-600 border-red-300 hover:bg-red-50">
+              <LogOut className="h-4 w-4 mr-2" />
+              Chiqish
             </Button>
           </div>
         </div>
@@ -497,7 +530,7 @@ export default function AdminPage() {
                     </TableHeader>
                     <TableBody>
                       {users.map((user) => (
-                        <TableRow key={user?._id}>
+                        <TableRow key={user?.id}>
                           <TableCell className="font-medium">
                             {user?.first_name}
                           </TableCell>
@@ -521,13 +554,35 @@ export default function AdminPage() {
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleEditUserCoursesClick(user)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEditUserCoursesClick(user)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              {user?.role !== 'admin' && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                                  onClick={() => handleUpdateUserRole(String(user?.id), 'admin')}
+                                >
+                                  Admin qilish
+                                </Button>
+                              )}
+                              {user?.role === 'admin' && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-gray-600 border-gray-200 hover:bg-gray-50"
+                                  onClick={() => handleUpdateUserRole(String(user?.id), 'user')}
+                                >
+                                  User qilish
+                                </Button>
+                              )}
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -591,7 +646,7 @@ export default function AdminPage() {
                     </TableHeader>
                     <TableBody>
                       {courses.map((course) => (
-                        <TableRow key={course._id}>
+                        <TableRow key={course.id}>
                           <TableCell className="font-medium">
                             {course.title}
                           </TableCell>
@@ -613,7 +668,7 @@ export default function AdminPage() {
                               variant="outline"
                               size="sm"
                               className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
-                              onClick={() => handleDeleteCourse(course._id)}
+                              onClick={() => handleDeleteCourse(String(course.id))}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -660,7 +715,7 @@ export default function AdminPage() {
                     </TableHeader>
                     <TableBody>
                       {videos.map((video) => (
-                        <TableRow key={video._id}>
+                        <TableRow key={video.id}>
                           <TableCell className="font-medium">
                             <Link
                               href={`/watch/${video.url.split("/").pop()}`}
@@ -684,7 +739,7 @@ export default function AdminPage() {
                               variant="outline"
                               size="sm"
                               className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
-                              onClick={() => handleDeleteVideo(video._id)}
+                              onClick={() => handleDeleteVideo(String(video.id))}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -785,7 +840,7 @@ export default function AdminPage() {
                   <TableBody>
                     {courseVideos.length > 0 ? (
                       courseVideos.map((videoId) => {
-                        const video = videos.find((v) => v._id === videoId);
+                        const video = videos.find((v) => String(v.id) === videoId);
                         if (!video) return null;
                         return (
                           <TableRow key={videoId}>
@@ -828,9 +883,9 @@ export default function AdminPage() {
               <div className="flex items-center space-x-2">
                 <div className="flex-grow">
                   <VideoCombobox
-                    videos={videos.filter(
-                      (video) => !courseVideos.includes(video._id)
-                    )}
+                      videos={videos.filter(
+                        (video) => !courseVideos.includes(String(video.id))
+                      )}
                     selectedVideos={videosToAddToForm}
                     onChange={setVideosToAddToForm}
                   />
@@ -984,7 +1039,7 @@ export default function AdminPage() {
                 <TableBody>
                   {userCourses.length > 0 ? (
                     userCourses.map((courseId) => {
-                      const course = courses.find((c) => c._id === courseId);
+                        const course = courses.find((c) => String(c.id) === courseId);
                       if (!course) return null;
                       return (
                         <TableRow key={courseId}>
@@ -1024,7 +1079,7 @@ export default function AdminPage() {
               <div className="flex-grow">
                 <CourseCombobox
                   courses={courses.filter(
-                    (course) => !userCourses.includes(course._id)
+                    (course) => !userCourses.includes(String(course.id))
                   )}
                   selectedCourses={coursesToAddToUser}
                   onChange={setCoursesToAddToUser}

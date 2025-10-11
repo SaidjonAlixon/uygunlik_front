@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Settings, BookOpen, PlayCircle } from "lucide-react";
+import { Heart, Settings, BookOpen, PlayCircle, LogOut } from "lucide-react";
 import Link from "next/link";
 import UserService from "@/services/user.service";
 import { useToast } from "@/components/ui/use-toast";
@@ -47,10 +47,17 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export default function DashboardPage() {
-  const { user, setUser } = useUserStore();
+  const { user, setUser, clearUser } = useUserStore();
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
+
+  const handleLogout = () => {
+    // Clear token
+    localStorage.removeItem('auth_token');
+    // Redirect to home
+    window.location.href = '/';
+  };
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -152,6 +159,10 @@ export default function DashboardPage() {
             <Button variant="outline" size="sm" onClick={() => router.push('/settings')}>
               <Settings className="h-4 w-4 mr-2" />
               Sozlamalar
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleLogout} className="text-red-600 border-red-300 hover:bg-red-50">
+              <LogOut className="h-4 w-4 mr-2" />
+              Chiqish
             </Button>
           </div>
         </div>

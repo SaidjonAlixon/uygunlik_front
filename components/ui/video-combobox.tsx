@@ -47,14 +47,14 @@ export function VideoCombobox({ videos, selectedVideos, onChange }: VideoCombobo
           <CommandGroup>
             {videos.map((video) => (
               <CommandItem
-                key={video._id}
-                value={video._id}
+                key={video.id}
+                value={String(video.id)}
                 onSelect={handleSelect}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    selectedVideos.includes(video._id) ? "opacity-100" : "opacity-0"
+                    selectedVideos.includes(String(video.id)) ? "opacity-100" : "opacity-0"
                   )}
                 />
                 {video.title}

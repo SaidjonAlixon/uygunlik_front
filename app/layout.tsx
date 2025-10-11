@@ -7,9 +7,9 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "@/components/session-provider";
+import { Dancing_Script } from "next/font/google";
 import { useEffect } from "react";
 import { useUserStore } from "@/store/user.store";
-import { Dancing_Script } from "next/font/google";
 
 const dancing = Dancing_Script({
   subsets: ["latin"],
@@ -25,6 +25,7 @@ export default function RootLayout({
   const initializeUser = useUserStore((state) => state.initializeUser);
 
   useEffect(() => {
+    // Load user from database on mount
     initializeUser();
   }, [initializeUser]);
 

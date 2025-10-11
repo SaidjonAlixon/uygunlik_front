@@ -1,7 +1,8 @@
 import { Video } from "./video";
 
 export interface Course {
-  _id: string;
+  id: number;
+  _id?: string; // Backward compatibility
   title: string;
   description?: string;
   price: number;

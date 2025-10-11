@@ -6,10 +6,11 @@ export enum Role {
 }
 
 export interface User {
-  _id: string;
+  id: number;
+  _id?: string; // Backward compatibility
   first_name: string;
   last_name: string;
-  phone: string;
+  phone?: string;
   email: string;
   balance: number;
   courses: Course[];

@@ -47,14 +47,14 @@ export function CourseCombobox({ courses, selectedCourses, onChange }: CourseCom
           <CommandGroup>
             {courses.map((course) => (
               <CommandItem
-                key={course._id}
-                value={course._id}
+                key={course.id}
+                value={String(course.id)}
                 onSelect={handleSelect}
               >
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    selectedCourses.includes(course._id) ? "opacity-100" : "opacity-0"
+                    selectedCourses.includes(String(course.id)) ? "opacity-100" : "opacity-0"
                   )}
                 />
                 {course.title}

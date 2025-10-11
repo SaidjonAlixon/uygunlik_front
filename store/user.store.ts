@@ -12,16 +12,33 @@ interface UserStore {
 
 export const useUserStore = create<UserStore>((set) => ({
   user: undefined,
-  loading: true, // Initial loading state
+  loading: true,
   setUser: (user: User | null) => set({ user }),
-  clearUser: () => set({ user: null }),
+  clearUser: () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token');
+    }
+    set({ user: null });
+  },
   initializeUser: async () => {
+    // Check if token exists before making API call
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    
+    if (!token) {
+      set({ user: null, loading: false });
+      return;
+    }
+    
     set({ loading: true });
     try {
       const data = await UserService.getMe();
       set({ user: data.user, loading: false });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to initialize user:", error);
+      // Clear user and token on any error
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+      }
       set({ user: null, loading: false });
     }
   },

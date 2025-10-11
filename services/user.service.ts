@@ -44,6 +44,11 @@ class UserService {
     const response = await api.patch(`/users/${userId}/courses`, { courses: courseIds });
     return response.data;
   }
+
+  async updateUserRole(userId: string, role: string): Promise<User> {
+    const response = await api.patch(`/users/${userId}/role`, { role });
+    return response.data;
+  }
 }
 
 export default new UserService();

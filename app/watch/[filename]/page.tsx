@@ -239,29 +239,6 @@ export default function WatchPage() {
       onMouseLeave={() => setShowControls(false)}
       onClick={showControlsTemporarily}
     >
-      {/* Orqa fon rasmi */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="/images/fon.png"
-          alt="Background"
-              className="w-full h-full object-cover opacity-50"
-          style={{ 
-            minHeight: '100vh',
-            transform: 'scale(1.2)',
-            transformOrigin: 'center',
-            maxHeight: '100vh'
-          }}
-        />
-      </div>
-      {/* Overlay suv belgisi */}
-      <div
-        className="absolute inset-0 z-10 pointer-events-none"
-        style={{
-          background:
-            'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' version=\'1.1\' height=\'100px\' width=\'100px\'><text x=\'0\' y=\'50\' fill=\'rgba(255,255,255,0.05)\' font-size=\'14\'>CONFIDENTIAL</text></svg>")',
-          backgroundRepeat: "repeat",
-        }}
-      />
 
       {/* Video container */}
       <div className="relative w-11/12 max-w-5xl z-20">

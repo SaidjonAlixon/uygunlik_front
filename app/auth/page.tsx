@@ -52,8 +52,12 @@ export default function AuthPage() {
     setIsLoading(true);
     try {
       const response = await userService.login(values);
-      const { user } = response;
+      const { user, token } = response;
+      
+      // Save user data and token to localStorage
       setUser(user);
+      localStorage.setItem('auth_token', token);
+      
       toast.success('Xush kelibsiz!');
       if (user.role === Role.ADMIN) {
         router.push('/admin');

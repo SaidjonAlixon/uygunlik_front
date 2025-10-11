@@ -1,5 +1,6 @@
 export interface Video {
-  _id: string;
+  id: number;
+  _id?: string; // Backward compatibility
   title: string;
   description?: string;
   url: string;

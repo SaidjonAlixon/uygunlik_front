@@ -67,8 +67,12 @@ export default function RegisterPage() {
     try {
       const { confirmPassword, ...registerData } = values;
       const response = await userService.register(registerData);
-      const { user } = response;
+      const { user, token } = response;
+      
+      // Save user data and token to localStorage
       setUser(user);
+      localStorage.setItem('auth_token', token);
+      
       toast.success("Muvaffaqiyatli ro'yxatdan o'tdingiz!");
       router.push('/dashboard');
     } catch (error: any) {
