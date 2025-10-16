@@ -2,13 +2,40 @@ import { Pool } from 'pg';
 
 // PostgreSQL connection pool
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/uygunlik',
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
+
+// Check if database is available
+let isDatabaseAvailable = false;
+
+// Fallback in-memory database
+let users: any[] = [];
+let nextId = 1;
+
+// Initialize with default admin for fallback
+if (users.length === 0) {
+  users.push({
+    id: 1,
+    first_name: 'Admin',
+    last_name: 'User',
+    email: 'admin@uygunlik.uz',
+    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+    role: 'admin',
+    status: true,
+    created_at: new Date().toISOString(),
+    courses: []
+  });
+  nextId = 2;
+}
 
 // Database schema initialization
 export async function initializeDatabase() {
   try {
+    // Test database connection
+    await pool.query('SELECT 1');
+    isDatabaseAvailable = true;
+    console.log('✅ PostgreSQL database connected');
     // Create users table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -80,7 +107,9 @@ export async function initializeDatabase() {
     console.log('✅ Database initialized successfully');
   } catch (error) {
     console.error('❌ Database initialization error:', error);
-    throw error;
+    isDatabaseAvailable = false;
+    console.log('⚠️ Falling back to in-memory database');
+    // Don't throw error, fall back to in-memory database
   }
 }
 
@@ -94,66 +123,114 @@ export class UserService {
     role?: string;
     status?: boolean;
   }) {
-    const result = await pool.query(`
-      INSERT INTO users (first_name, last_name, email, password, role, status)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *
-    `, [
-      userData.first_name,
-      userData.last_name,
-      userData.email,
-      userData.password,
-      userData.role || 'user',
-      userData.status !== undefined ? userData.status : true
-    ]);
-    
-    return result.rows[0];
+    if (isDatabaseAvailable) {
+      const result = await pool.query(`
+        INSERT INTO users (first_name, last_name, email, password, role, status)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *
+      `, [
+        userData.first_name,
+        userData.last_name,
+        userData.email,
+        userData.password,
+        userData.role || 'user',
+        userData.status !== undefined ? userData.status : true
+      ]);
+      
+      return result.rows[0];
+    } else {
+      // Fallback to in-memory database
+      const newUser = {
+        id: nextId++,
+        ...userData,
+        role: userData.role || 'user',
+        status: userData.status !== undefined ? userData.status : true,
+        created_at: new Date().toISOString(),
+        courses: []
+      };
+      users.push(newUser);
+      return newUser;
+    }
   }
 
   static async findByEmail(email: string) {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    return result.rows[0] || null;
+    if (isDatabaseAvailable) {
+      const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+      return result.rows[0] || null;
+    } else {
+      // Fallback to in-memory database
+      return users.find(user => user.email === email) || null;
+    }
   }
 
   static async findById(id: number) {
-    const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-    return result.rows[0] || null;
+    if (isDatabaseAvailable) {
+      const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+      return result.rows[0] || null;
+    } else {
+      // Fallback to in-memory database
+      return users.find(user => user.id === id) || null;
+    }
   }
 
   static async findAll(page: number = 1, limit: number = 10, search: string = '') {
-    const offset = (page - 1) * limit;
-    let query = 'SELECT * FROM users';
-    let params: any[] = [];
-    
-    if (search) {
-      query += ' WHERE first_name ILIKE $1 OR last_name ILIKE $1 OR email ILIKE $1';
-      params.push(`%${search}%`);
+    if (isDatabaseAvailable) {
+      const offset = (page - 1) * limit;
+      let query = 'SELECT * FROM users';
+      let params: any[] = [];
+      
+      if (search) {
+        query += ' WHERE first_name ILIKE $1 OR last_name ILIKE $1 OR email ILIKE $1';
+        params.push(`%${search}%`);
+      }
+      
+      query += ` ORDER BY created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+      params.push(limit, offset);
+      
+      const result = await pool.query(query, params);
+      
+      // Get total count
+      let countQuery = 'SELECT COUNT(*) FROM users';
+      let countParams: any[] = [];
+      
+      if (search) {
+        countQuery += ' WHERE first_name ILIKE $1 OR last_name ILIKE $1 OR email ILIKE $1';
+        countParams.push(`%${search}%`);
+      }
+      
+      const countResult = await pool.query(countQuery, countParams);
+      const total = parseInt(countResult.rows[0].count);
+      
+      return {
+        data: result.rows,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      };
+    } else {
+      // Fallback to in-memory database
+      let filteredUsers = users;
+      
+      if (search) {
+        filteredUsers = users.filter(user => 
+          user.first_name.toLowerCase().includes(search.toLowerCase()) ||
+          user.last_name.toLowerCase().includes(search.toLowerCase()) ||
+          user.email.toLowerCase().includes(search.toLowerCase())
+        );
+      }
+      
+      const offset = (page - 1) * limit;
+      const paginatedUsers = filteredUsers.slice(offset, offset + limit);
+      
+      return {
+        data: paginatedUsers,
+        total: filteredUsers.length,
+        page,
+        limit,
+        totalPages: Math.ceil(filteredUsers.length / limit)
+      };
     }
-    
-    query += ` ORDER BY created_at DESC LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
-    params.push(limit, offset);
-    
-    const result = await pool.query(query, params);
-    
-    // Get total count
-    let countQuery = 'SELECT COUNT(*) FROM users';
-    let countParams: any[] = [];
-    
-    if (search) {
-      countQuery += ' WHERE first_name ILIKE $1 OR last_name ILIKE $1 OR email ILIKE $1';
-      countParams.push(`%${search}%`);
-    }
-    
-    const countResult = await pool.query(countQuery, countParams);
-    const total = parseInt(countResult.rows[0].count);
-    
-    return {
-      data: result.rows,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit)
-    };
   }
 
   static async update(id: number, updates: {
@@ -164,32 +241,56 @@ export class UserService {
     role?: string;
     status?: boolean;
   }) {
-    const fields = [];
-    const values = [];
-    let paramCount = 1;
-    
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value !== undefined) {
-        fields.push(`${key} = $${paramCount}`);
-        values.push(value);
-        paramCount++;
-      }
-    });
-    
-    if (fields.length === 0) return null;
-    
-    fields.push(`updated_at = CURRENT_TIMESTAMP`);
-    values.push(id);
-    
-    const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
-    const result = await pool.query(query, values);
-    
-    return result.rows[0] || null;
+    if (isDatabaseAvailable) {
+      const fields = [];
+      const values = [];
+      let paramCount = 1;
+      
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value !== undefined) {
+          fields.push(`${key} = $${paramCount}`);
+          values.push(value);
+          paramCount++;
+        }
+      });
+      
+      if (fields.length === 0) return null;
+      
+      fields.push(`updated_at = CURRENT_TIMESTAMP`);
+      values.push(id);
+      
+      const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
+      const result = await pool.query(query, values);
+      
+      return result.rows[0] || null;
+    } else {
+      // Fallback to in-memory database
+      const userIndex = users.findIndex(user => user.id === id);
+      if (userIndex === -1) return null;
+      
+      users[userIndex] = {
+        ...users[userIndex],
+        ...updates,
+        updated_at: new Date().toISOString()
+      };
+      
+      return users[userIndex];
+    }
   }
 
   static async delete(id: number) {
-    const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
-    return result.rows[0] || null;
+    if (isDatabaseAvailable) {
+      const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+      return result.rows[0] || null;
+    } else {
+      // Fallback to in-memory database
+      const userIndex = users.findIndex(user => user.id === id);
+      if (userIndex === -1) return null;
+      
+      const deletedUser = users[userIndex];
+      users.splice(userIndex, 1);
+      return deletedUser;
+    }
   }
 }
 
