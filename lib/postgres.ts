@@ -90,6 +90,22 @@ export async function initializeDatabase() {
       console.log('✅ Default admin user created');
     }
 
+    // Create sample video if not exists
+    const videoExists = await pool.query('SELECT id FROM videos WHERE filename = $1', ['0406.mp4']);
+    if (videoExists.rows.length === 0) {
+      await pool.query(`
+        INSERT INTO videos (title, description, filename, url)
+        VALUES ($1, $2, $3, $4)
+      `, [
+        'Namuna Video',
+        'Bu namuna video',
+        '0406.mp4',
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+      ]);
+      
+      console.log('✅ Sample video created');
+    }
+
     isDatabaseInitialized = true;
     console.log('✅ Database initialized successfully');
   } catch (error) {
