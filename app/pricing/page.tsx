@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, CheckCircle, ArrowRight } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useUserStore } from "@/store/user.store";
@@ -36,8 +36,7 @@ export default function PricingPage() {
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-red-600" />
-            <h1 className="text-2xl font-bold text-red-900">Uyg'unlik</h1>
+            <h1 className="text-2xl font-bold text-red-900">Narxlar</h1>
           </Link>
           <nav className="hidden md:flex items-center space-x-6">
             <Link href="/" className="text-gray-600 hover:text-red-800">
@@ -371,7 +370,7 @@ export default function PricingPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <h3 className="text-xl font-bold">Uyg'unlik platformasi</h3>
+                <h3 className="text-xl font-bold">Platform</h3>
               </div>
               <p className="text-gray-400">
                 Ayollar uchun tabiiy va xavfsiz homiladorlik rejalashtirish
@@ -441,7 +440,7 @@ export default function PricingPage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Uyg'unlik. Barcha huquqlar himoyalangan.</p>
+            <p>&copy; 2024 Platform. Barcha huquqlar himoyalangan.</p>
           </div>
         </div>
       </footer>

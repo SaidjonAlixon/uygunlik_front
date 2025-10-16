@@ -16,7 +16,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import {
-  Heart,
   Users,
   CreditCard,
   BookOpen,
@@ -453,12 +452,11 @@ export default function AdminPage() {
       </div>
       <header className="bg-white border-b relative z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-red-600" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              Uyg'unlik Admin
-            </h1>
-          </div>
+              <div className="flex items-center space-x-2">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Admin Panel
+                </h1>
+              </div>
           <div className="flex items-center space-x-4">
             <Badge variant="secondary" className="bg-blue-100 text-blue-800">
               Administrator

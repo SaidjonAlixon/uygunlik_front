@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Settings, BookOpen, PlayCircle, LogOut } from "lucide-react";
+import { Settings, BookOpen, PlayCircle, LogOut } from "lucide-react";
 import Link from "next/link";
 import UserService from "@/services/user.service";
 import { useToast } from "@/components/ui/use-toast";
@@ -149,8 +149,7 @@ export default function DashboardPage() {
       <header className="bg-white border-b relative z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-red-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Uyg'unlik</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           </Link>
           <div className="flex items-center space-x-4">
             <Badge variant="secondary" className="bg-red-100 text-red-800">

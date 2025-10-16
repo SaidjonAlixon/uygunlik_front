@@ -101,7 +101,7 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
       >
         <motion.img
           src="/images/logo-main.png"
-          alt="Uyg'unlik Logo"
+          alt="Platform Logo"
           className="h-40 md:h-56 lg:h-64 mx-auto mb-8"
           initial={{ y: -20 }}
           animate={{ y: 0 }}
@@ -663,7 +663,7 @@ export default function HomePage() {
               >
                 <img
                   src="/images/logo-decorated.png"
-                  alt="Uyg'unlik Logo"
+                  alt="Platform Logo"
                   className="h-20 md:h-40 lg:h-48 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
                 />
               </motion.div>{" "}
@@ -987,7 +987,6 @@ export default function HomePage() {
                             }
                           }}
                         />
-                        <Heart className="h-12 w-12 text-red-800 hidden" />
                       </div>
                     </div>
                     <p className="text-gray-600 mb-4 text-center font-bold">
@@ -2331,7 +2330,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
-            <p>&copy; 2025 Uyg'unlik. Barcha huquqlar himoyalangan.</p>
+            <p>&copy; 2025 Platform. Barcha huquqlar himoyalangan.</p>
           </div>
         </div>
       </footer>

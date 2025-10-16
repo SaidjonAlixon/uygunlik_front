@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Heart, Shield, CheckCircle } from "lucide-react";
+import { Shield, CheckCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function AdminSetupPage() {
@@ -115,7 +115,6 @@ export default function AdminSetupPage() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <Heart className="h-12 w-12 text-red-600 mr-2" />
               <Shield className="h-12 w-12 text-blue-600" />
             </div>
             <CardTitle className="text-2xl font-bold text-gray-900">

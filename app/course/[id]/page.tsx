@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import {
-  Heart,
   Play,
   Pause,
   SkipBack,
@@ -159,8 +158,7 @@ export default function CoursePage() {
       <header className="bg-white border-b relative z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center space-x-2">
-            <Heart className="h-8 w-8 text-red-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Uyg'unlik</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Kurs</h1>
           </Link>
           <div className="flex items-center space-x-4">
             <Badge variant="secondary" className="bg-red-100 text-red-800">

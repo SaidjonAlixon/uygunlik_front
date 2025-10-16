@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Heart, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function TermsPage() {
@@ -51,7 +51,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-red-800 mb-4">1. Umumiy qoidalar</h2>
               <p className="text-gray-700 mb-4">
-                Ushbu foydalanish shartlari "Uyg'unlik" platformasi (keyingi o'rinlarda "Platforma" yoki "Xizmat") 
+                Ushbu foydalanish shartlari platformasi (keyingi o'rinlarda "Platforma" yoki "Xizmat") 
                 foydalanuvchilari uchun amal qiladi. Platformadan foydalanish orqali siz ushbu shartlarni to'liq 
                 qabul qilganingizni bildirasiz.
               </p>
@@ -63,7 +63,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-red-800 mb-4">2. Xizmat haqida</h2>
               <p className="text-gray-700 mb-4">
-                "Uyg'unlik" platformasi ayollar uchun tabiiy va xavfsiz homiladorlik rejalashtirish kurslarini 
+                Platformasi ayollar uchun tabiiy va xavfsiz homiladorlik rejalashtirish kurslarini 
                 taqdim etadi. Platforma quyidagi xizmatlarni o'z ichiga oladi:
               </p>
               <ul className="list-disc list-inside text-gray-700 mb-4 space-y-2">
@@ -145,7 +145,7 @@ export default function TermsPage() {
 
             <div className="border-t pt-6 mt-8">
               <p className="text-sm text-gray-500 text-center">
-                © 2025 Uyg'unlik. Barcha huquqlar himoyalangan.
+                © 2025 Platform. Barcha huquqlar himoyalangan.
               </p>
             </div>
           </div>
