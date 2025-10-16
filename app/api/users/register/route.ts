@@ -80,6 +80,10 @@ export async function POST(request: NextRequest) {
       courses: []
     });
 
+    // Debug: log user creation
+    console.log('User created:', newUser);
+    console.log('Total users now:', users.length);
+
     // Create JWT token
     const token = createToken({ id: newUser.id, email: newUser.email });
 

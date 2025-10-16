@@ -25,9 +25,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Debug: log login attempt
+    console.log('Login attempt for email:', email);
+    console.log('Total users in database:', users.length);
+    console.log('All users:', users.map(u => ({ id: u.id, email: u.email, role: u.role })));
+
     // Find user by email
     const user = findUserByEmail(email);
     if (!user) {
+      console.log('User not found for email:', email);
       return NextResponse.json(
         { error: 'Noto\'g\'ri email yoki parol' },
         { status: 401 }

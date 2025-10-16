@@ -15,8 +15,27 @@ export interface User {
 }
 
 // Global users array - shared across all API routes
+// In Vercel, this will be reset on each cold start
+// For production, use a real database like PostgreSQL, MongoDB, or Vercel KV
 export let users: User[] = [];
 export let nextId = 1;
+
+// Initialize with a default admin user for testing
+if (users.length === 0) {
+  console.log('Initializing database with default admin...');
+  users.push({
+    id: 1,
+    first_name: 'Admin',
+    last_name: 'User',
+    email: 'admin@uygunlik.uz',
+    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+    role: 'admin',
+    status: true,
+    created_at: new Date().toISOString(),
+    courses: []
+  });
+  nextId = 2;
+}
 
 // Helper functions
 export function addUser(user: Omit<User, 'id'>): User {
