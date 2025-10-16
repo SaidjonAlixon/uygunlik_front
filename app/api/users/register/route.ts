@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { addUser, findUserByEmail } from '@/lib/database';
+import { UserService, initializeDatabase } from '@/lib/postgres';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -29,6 +29,9 @@ function verifyToken(token: string): any {
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize database
+    await initializeDatabase();
+    
     const body = await request.json();
     const { first_name, last_name, email, password } = body;
 
@@ -57,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already exists
-    const existingUser = findUserByEmail(email);
+    const existingUser = await UserService.findByEmail(email);
     if (existingUser) {
       return NextResponse.json(
         { error: 'Bu email bilan foydalanuvchi allaqachon mavjud' },
@@ -70,19 +73,17 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create user
-    const newUser = addUser({
+    const newUser = await UserService.create({
       first_name,
       last_name,
       email,
       password: hashedPassword,
       role: 'user',
-      status: true,
-      courses: []
+      status: true
     });
 
     // Debug: log user creation
     console.log('User created:', newUser);
-    console.log('Total users now:', users.length);
 
     // Create JWT token
     const token = createToken({ id: newUser.id, email: newUser.email });

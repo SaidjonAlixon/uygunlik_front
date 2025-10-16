@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { findUserByEmail } from '@/lib/database';
+import { UserService, initializeDatabase } from '@/lib/postgres';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -14,6 +14,9 @@ function createToken(payload: any): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize database
+    await initializeDatabase();
+    
     const body = await request.json();
     const { email, password } = body;
 
@@ -27,11 +30,9 @@ export async function POST(request: NextRequest) {
 
     // Debug: log login attempt
     console.log('Login attempt for email:', email);
-    console.log('Total users in database:', users.length);
-    console.log('All users:', users.map(u => ({ id: u.id, email: u.email, role: u.role })));
 
     // Find user by email
-    const user = findUserByEmail(email);
+    const user = await UserService.findByEmail(email);
     if (!user) {
       console.log('User not found for email:', email);
       return NextResponse.json(

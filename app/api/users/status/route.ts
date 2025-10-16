@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { findUserById, updateUser } from '@/lib/database';
+import { UserService, initializeDatabase } from '@/lib/postgres';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -21,6 +21,9 @@ function verifyToken(token: string): any {
 
 export async function PATCH(request: NextRequest) {
   try {
+    // Initialize database
+    await initializeDatabase();
+    
     // Get token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -44,7 +47,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Check if current user is admin
-    const currentUser = findUserById(decoded.id);
+    const currentUser = await UserService.findById(decoded.id);
     if (!currentUser || currentUser.role !== 'admin') {
       return NextResponse.json(
         { error: 'Admin huquqi kerak' },
@@ -63,7 +66,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Find user to update
-    const userToUpdate = findUserById(parseInt(userId));
+    const userToUpdate = await UserService.findById(parseInt(userId));
     if (!userToUpdate) {
       return NextResponse.json(
         { error: 'Foydalanuvchi topilmadi' },
@@ -72,7 +75,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Update user status
-    const updatedUser = updateUser(parseInt(userId), { status });
+    const updatedUser = await UserService.update(parseInt(userId), { status });
     if (!updatedUser) {
       return NextResponse.json(
         { error: 'Foydalanuvchi statusi yangilanmadi' },

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { addUser, users } from '@/lib/database';
+import { UserService, initializeDatabase } from '@/lib/postgres';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -14,8 +14,11 @@ function createToken(payload: any): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize database
+    await initializeDatabase();
+    
     // Check if admin already exists
-    const existingAdmin = users.find(user => user.role === 'admin');
+    const existingAdmin = await UserService.findByEmail('admin@uygunlik.uz');
     if (existingAdmin) {
       return NextResponse.json(
         { error: 'Admin allaqachon mavjud' },
@@ -51,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user with this email already exists
-    const existingUser = users.find(user => user.email === email);
+    const existingUser = await UserService.findByEmail(email);
     if (existingUser) {
       return NextResponse.json(
         { error: 'Bu email bilan foydalanuvchi allaqachon mavjud' },
@@ -64,14 +67,13 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create admin user
-    const adminUser = addUser({
+    const adminUser = await UserService.create({
       first_name,
       last_name,
       email,
       password: hashedPassword,
       role: 'admin',
-      status: true,
-      courses: []
+      status: true
     });
 
     // Create JWT token

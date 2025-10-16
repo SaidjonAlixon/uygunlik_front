@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { users, findUserById } from '@/lib/database';
+import { UserService, initializeDatabase } from '@/lib/postgres';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -21,6 +21,9 @@ function verifyToken(token: string): any {
 
 export async function GET(request: NextRequest) {
   try {
+    // Initialize database
+    await initializeDatabase();
+    
     // Get token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -44,7 +47,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if current user is admin
-    const currentUser = findUserById(decoded.id);
+    const currentUser = await UserService.findById(decoded.id);
     if (!currentUser || currentUser.role !== 'admin') {
       return NextResponse.json(
         { error: 'Admin huquqi kerak' },
@@ -58,23 +61,11 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const search = searchParams.get('search') || '';
 
-    // Filter users based on search term
-    let filteredUsers = users;
-    if (search) {
-      filteredUsers = users.filter(user => 
-        user.first_name.toLowerCase().includes(search.toLowerCase()) ||
-        user.last_name.toLowerCase().includes(search.toLowerCase()) ||
-        user.email.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    // Pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+    // Get users from database
+    const result = await UserService.findAll(page, limit, search);
 
     // Return users without passwords
-    const usersWithoutPasswords = paginatedUsers.map(user => {
+    const usersWithoutPasswords = result.data.map(user => {
       const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     });
@@ -82,10 +73,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       { 
         data: usersWithoutPasswords,
-        total: filteredUsers.length,
-        page,
-        limit,
-        totalPages: Math.ceil(filteredUsers.length / limit)
+        total: result.total,
+        page: result.page,
+        limit: result.limit,
+        totalPages: result.totalPages
       },
       { status: 200 }
     );

@@ -9,6 +9,7 @@ NEXT_PUBLIC_API_URL = /api
 NEXT_PUBLIC_APP_NAME = Uygunlik Learning Platform
 NODE_ENV = production
 JWT_SECRET = your_very_secure_jwt_secret_key_here
+DATABASE_URL = postgresql://username:password@host:port/database_name
 ```
 
 ### Preview Environment Variables (ixtiyoriy):

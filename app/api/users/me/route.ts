@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { findUserById, updateUser, findUserByEmail } from '@/lib/database';
+import { UserService, initializeDatabase } from '@/lib/postgres';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -21,6 +21,9 @@ function verifyToken(token: string): any {
 
 export async function GET(request: NextRequest) {
   try {
+    // Initialize database
+    await initializeDatabase();
+    
     // Get token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -44,7 +47,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Find user by ID
-    const user = findUserById(decoded.id);
+    const user = await UserService.findById(decoded.id);
     if (!user) {
       return NextResponse.json(
         { error: 'Foydalanuvchi topilmadi' },
@@ -71,6 +74,9 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+    // Initialize database
+    await initializeDatabase();
+    
     // Get token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -94,7 +100,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Find user by ID
-    const existingUser = findUserById(decoded.id);
+    const existingUser = await UserService.findById(decoded.id);
     if (!existingUser) {
       return NextResponse.json(
         { error: 'Foydalanuvchi topilmadi' },
@@ -112,7 +118,7 @@ export async function PATCH(request: NextRequest) {
     
     if (email && email !== existingUser.email) {
       // Check if email is already in use
-      const emailUser = findUserByEmail(email);
+      const emailUser = await UserService.findByEmail(email);
       if (emailUser && emailUser.id !== decoded.id) {
         return NextResponse.json(
           { error: 'Bu email allaqachon ishlatilmoqda' },
@@ -129,7 +135,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Update user
-    const updatedUser = updateUser(decoded.id, updates);
+    const updatedUser = await UserService.update(decoded.id, updates);
     if (!updatedUser) {
       return NextResponse.json(
         { error: 'Foydalanuvchi yangilanmadi' },
