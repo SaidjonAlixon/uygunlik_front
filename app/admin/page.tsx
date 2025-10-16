@@ -134,6 +134,32 @@ export default function AdminPage() {
     );
   }, [user, router]);
 
+  // Check if admin exists, if not redirect to setup
+  useEffect(() => {
+    const checkAdminExists = async () => {
+      try {
+        const response = await fetch('/api/users/all', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          }
+        });
+        
+        if (response.status === 401) {
+          // No admin exists, redirect to setup
+          router.push('/admin/setup');
+        }
+      } catch (error) {
+        console.error('Check admin error:', error);
+        // If error, assume no admin exists
+        router.push('/admin/setup');
+      }
+    };
+
+    if (user?.role !== Role.ADMIN) {
+      checkAdminExists();
+    }
+  }, [user, router]);
+
   useEffect(() => {
     if (user && user?.role === Role.ADMIN) {
       console.log("Admin user detected, fetching users...");
