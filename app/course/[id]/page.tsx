@@ -23,7 +23,7 @@ import Link from "next/link"
 import courseService from "@/services/course.service"
 import { Course } from "@/types/course"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.uygunlik.uz";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export default function CoursePage() {
   const { id } = useParams();

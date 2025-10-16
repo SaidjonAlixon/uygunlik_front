@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+// Force use of Vercel API routes
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
+  baseURL: '/api',
   withCredentials: true,
 });
 

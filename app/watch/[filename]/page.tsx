@@ -19,7 +19,7 @@ import {
   Settings
 } from "lucide-react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.uygunlik.uz";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export default function WatchPage() {
   const { filename } = useParams();
