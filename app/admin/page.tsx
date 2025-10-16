@@ -217,14 +217,27 @@ export default function AdminPage() {
     try {
       if (selectedCourse) {
         await CourseService.update(String(selectedCourse.id), courseData);
+        toast({
+          title: "Muvaffaqiyatli!",
+          description: "Kurs muvaffaqiyatli yangilandi.",
+        });
       } else {
         await CourseService.create(courseData);
+        toast({
+          title: "Muvaffaqiyatli!",
+          description: "Kurs muvaffaqiyatli yaratildi.",
+        });
       }
       fetchCourses();
       setIsCourseFormOpen(false);
       resetCourseForm();
     } catch (error) {
       console.error("Kursni saqlashda xato:", error);
+      toast({
+        title: "Xatolik!",
+        description: "Kursni saqlashda xatolik yuz berdi.",
+        variant: "destructive",
+      });
     }
   };
 

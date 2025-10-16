@@ -315,6 +315,11 @@ export class VideoService {
     return result.rows[0] || null;
   }
 
+  static async findByFilename(filename: string) {
+    const result = await pool.query('SELECT * FROM videos WHERE filename = $1', [filename]);
+    return result.rows[0] || null;
+  }
+
   static async update(id: number, updates: any) {
     const fields = [];
     const values = [];
