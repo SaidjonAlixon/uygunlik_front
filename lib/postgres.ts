@@ -279,6 +279,35 @@ export class CourseService {
     return result.rows[0] || null;
   }
 
+  static async update(id: number, updates: any) {
+    const fields = [];
+    const values = [];
+    let paramCount = 1;
+    
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value !== undefined) {
+        if (key === 'videos' || key === 'category') {
+          fields.push(`${key} = $${paramCount}`);
+          values.push(JSON.stringify(value));
+        } else {
+          fields.push(`${key} = $${paramCount}`);
+          values.push(value);
+        }
+        paramCount++;
+      }
+    });
+    
+    if (fields.length === 0) return null;
+    
+    fields.push(`updated_at = CURRENT_TIMESTAMP`);
+    values.push(id);
+    
+    const query = `UPDATE courses SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
+    const result = await pool.query(query, values);
+    
+    return result.rows[0] || null;
+  }
+
   static async delete(id: number) {
     const result = await pool.query('DELETE FROM courses WHERE id = $1 RETURNING *', [id]);
     return result.rows[0] || null;
@@ -314,6 +343,30 @@ export class VideoService {
 
   static async findById(id: number) {
     const result = await pool.query('SELECT * FROM videos WHERE id = $1', [id]);
+    return result.rows[0] || null;
+  }
+
+  static async update(id: number, updates: any) {
+    const fields = [];
+    const values = [];
+    let paramCount = 1;
+    
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value !== undefined) {
+        fields.push(`${key} = $${paramCount}`);
+        values.push(value);
+        paramCount++;
+      }
+    });
+    
+    if (fields.length === 0) return null;
+    
+    fields.push(`updated_at = CURRENT_TIMESTAMP`);
+    values.push(id);
+    
+    const query = `UPDATE videos SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
+    const result = await pool.query(query, values);
+    
     return result.rows[0] || null;
   }
 
