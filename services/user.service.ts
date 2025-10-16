@@ -31,7 +31,7 @@ class UserService {
   }
 
   async findAll(page: number, limit: number, search: string) {
-    const response = await api.get('/users', { params: { page, limit, search } });
+    const response = await api.get('/users/all', { params: { page, limit, search } });
     return response.data;
   }
 
@@ -46,7 +46,12 @@ class UserService {
   }
 
   async updateUserRole(userId: string, role: string): Promise<User> {
-    const response = await api.patch(`/users/${userId}/role`, { role });
+    const response = await api.patch('/users/role', { userId, role });
+    return response.data;
+  }
+
+  async updateUserStatus(userId: string, status: boolean): Promise<User> {
+    const response = await api.patch('/users/status', { userId, status });
     return response.data;
   }
 }

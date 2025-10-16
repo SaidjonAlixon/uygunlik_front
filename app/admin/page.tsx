@@ -347,10 +347,19 @@ export default function AdminPage() {
 
   const handleUpdateUserStatus = async (userId: string, status: boolean) => {
     try {
-      console.log("Updating user status:", userId, status);
+      await UserService.updateUserStatus(userId, status);
+      toast({
+        title: "Muvaffaqiyatli!",
+        description: `Foydalanuvchi statusi ${status ? 'faol' : 'nofaol'} qilindi.`,
+      });
       fetchUsers();
     } catch (error) {
       console.error("Foydalanuvchi statusini yangilashda xato:", error);
+      toast({
+        title: "Xatolik!",
+        description: "Foydalanuvchi statusini yangilashda xatolik yuz berdi.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -547,11 +556,21 @@ export default function AdminPage() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <Badge
-                              variant={user?.status ? "default" : "outline"}
-                            >
-                              {user?.status ? "Faol" : "Nofaol"}
-                            </Badge>
+                            <div className="flex items-center gap-2">
+                              <Badge
+                                variant={user?.status ? "default" : "outline"}
+                              >
+                                {user?.status ? "Faol" : "Nofaol"}
+                              </Badge>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className={user?.status ? "text-red-600 border-red-200 hover:bg-red-50" : "text-green-600 border-green-200 hover:bg-green-50"}
+                                onClick={() => handleUpdateUserStatus(String(user?.id), !user?.status)}
+                              >
+                                {user?.status ? "Nofaol qilish" : "Faol qilish"}
+                              </Button>
+                            </div>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-2">
