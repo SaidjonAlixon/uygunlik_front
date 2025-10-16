@@ -233,6 +233,15 @@ export class CourseService {
 
   static async findAll() {
     const result = await pool.query('SELECT * FROM courses ORDER BY created_at DESC');
+    return result.rows.map(row => ({
+      ...row,
+      category: row.category || [],
+      videos: row.videos || [],
+    }));
+  }
+
+  static async findAll() {
+    const result = await pool.query('SELECT * FROM courses ORDER BY created_at DESC');
     return result.rows;
   }
 
