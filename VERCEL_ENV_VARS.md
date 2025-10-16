@@ -5,25 +5,28 @@
 ### Production Environment Variables:
 
 ```
-NEXT_PUBLIC_API_URL = https://www.uygunlik.uz/api
+NEXT_PUBLIC_API_URL = /api
 NEXT_PUBLIC_APP_NAME = Uygunlik Learning Platform
 NODE_ENV = production
+JWT_SECRET = your_very_secure_jwt_secret_key_here
 ```
 
 ### Preview Environment Variables (ixtiyoriy):
 
 ```
-NEXT_PUBLIC_API_URL = https://staging.uygunlik.uz/api
+NEXT_PUBLIC_API_URL = /api
 NEXT_PUBLIC_APP_NAME = Uygunlik Learning Platform (Staging)
 NODE_ENV = development
+JWT_SECRET = your_very_secure_jwt_secret_key_here
 ```
 
 ### Development Environment Variables (ixtiyoriy):
 
 ```
-NEXT_PUBLIC_API_URL = http://localhost:5000/api
+NEXT_PUBLIC_API_URL = /api
 NEXT_PUBLIC_APP_NAME = Uygunlik Learning Platform (Local)
 NODE_ENV = development
+JWT_SECRET = your_very_secure_jwt_secret_key_here
 ```
 
 ## Vercel'da qo'shish yo'li:
@@ -33,7 +36,11 @@ NODE_ENV = development
 3. **Settings** > **Environment Variables** ga o'ting
 4. Har bir variable uchun:
    - **Name**: `NEXT_PUBLIC_API_URL`
-   - **Value**: `https://www.uygunlik.uz/api`
+   - **Value**: `/api`
+   - **Environment**: Production (va Preview/Development kerak bo'lsa)
+   
+   - **Name**: `JWT_SECRET`
+   - **Value**: `your_very_secure_jwt_secret_key_here`
    - **Environment**: Production (va Preview/Development kerak bo'lsa)
 
 ## Muhim eslatmalar:
