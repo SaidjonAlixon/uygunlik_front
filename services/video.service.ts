@@ -16,15 +16,18 @@ export interface UpdateVideoDto {
 
 class VideoService {
   async create(file: File, createVideoDto: CreateVideoDto): Promise<Video> {
-    // 413 Content Too Large muammosini chetlash uchun hozircha faqat metadata yuboramiz
-    const payload: any = {
-      title: createVideoDto.title,
-      description: createVideoDto.description || "",
-      filename: file?.name || `video_${Date.now()}.mp4`,
-    };
-    if (createVideoDto.duration) payload.duration = createVideoDto.duration;
+    // Real video upload
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('title', createVideoDto.title);
+    if (createVideoDto.description) {
+      formData.append('description', createVideoDto.description);
+    }
+    if (createVideoDto.duration) {
+      formData.append('duration', createVideoDto.duration.toString());
+    }
 
-    const response = await api.post("/videos", payload);
+    const response = await api.post("/upload/video", formData);
     return response.data;
   }
 

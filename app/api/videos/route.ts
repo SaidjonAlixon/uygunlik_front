@@ -23,8 +23,8 @@ export async function POST(request: NextRequest) {
     }
 
     const safeFilename = filename || `video_${Date.now()}.mp4`;
-    // Real video URL - hozircha placeholder
-    const url = `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`;
+    // Real video URL - local upload
+    const url = `/uploads/${safeFilename}`;
 
     const video = await VideoService.create({
       title,
