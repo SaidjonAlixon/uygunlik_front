@@ -51,7 +51,7 @@ RUN mkdir -p ./client/uploads && chown -R nextjs:nodejs ./client/uploads
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV NEXT_PUBLIC_API_URL=http://localhost:5000
+ENV NEXT_PUBLIC_API_URL=https://www.uygunlik.uz/api
 
 # Expose ports
 EXPOSE 3000 5000

@@ -30,8 +30,8 @@ if [ ! -f .env ]; then
     echo "📝 Creating .env file..."
     cat > .env << EOF
 # Frontend Environment Variables
-NEXT_PUBLIC_API_URL=http://your-domain.com
-NEXT_PUBLIC_APP_NAME=Anor Learning Platform
+NEXT_PUBLIC_API_URL=https://www.uygunlik.uz/api
+NEXT_PUBLIC_APP_NAME=Uygunlik Learning Platform
 EOF
 fi
 
@@ -51,7 +51,7 @@ PORT=5000
 NODE_ENV=production
 
 # CORS
-CORS_ORIGIN=http://your-domain.com
+CORS_ORIGIN=https://www.uygunlik.u
 
 # Email (Eskiz)
 ESKIZ_EMAIL=your_eskiz_email@example.com
@@ -79,9 +79,9 @@ sleep 30
 echo "🔍 Checking service status..."
 if docker-compose ps | grep -q "Up"; then
     echo "✅ Services are running successfully!"
-    echo "🌐 Frontend: http://your-domain.com"
-    echo "🔧 Backend API: http://your-domain.com/api"
-    echo "📊 Health Check: http://your-domain.com/health"
+    echo "🌐 Frontend: https://www.uygunlik.u"
+    echo "🔧 Backend API: https://www.uygunlik.u/api"
+    echo "📊 Health Check: https://www.uygunlik.u/health"
 else
     echo "❌ Some services failed to start. Check logs with: docker-compose logs"
     exit 1
