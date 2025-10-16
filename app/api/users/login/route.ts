@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 // Mock database - production'da real database ishlatish kerak
 let users: any[] = [];
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
+
+// Simple JWT implementation for Vercel
+function createToken(payload: any): string {
+  const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const data = btoa(JSON.stringify(payload));
+  const signature = btoa(require('crypto').createHmac('sha256', JWT_SECRET).update(`${header}.${data}`).digest('base64'));
+  return `${header}.${data}.${signature}`;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,11 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create JWT token
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: '1d' }
-    );
+    const token = createToken({ id: user.id, email: user.email });
 
     // Return user without password
     const { password: _, ...userWithoutPassword } = user;

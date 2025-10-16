@@ -1,10 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
 
 // Mock database - production'da real database ishlatish kerak
 let users: any[] = [];
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
+
+// Simple JWT implementation for Vercel
+function verifyToken(token: string): any {
+  try {
+    const [header, data, signature] = token.split('.');
+    const expectedSignature = btoa(require('crypto').createHmac('sha256', JWT_SECRET).update(`${header}.${data}`).digest('base64'));
+    
+    if (signature !== expectedSignature) {
+      throw new Error('Invalid signature');
+    }
+    
+    return JSON.parse(atob(data));
+  } catch (error) {
+    throw new Error('Invalid token');
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +37,7 @@ export async function GET(request: NextRequest) {
     // Verify token
     let decoded: any;
     try {
-      decoded = jwt.verify(token, JWT_SECRET);
+      decoded = verifyToken(token);
     } catch (error) {
       return NextResponse.json(
         { error: 'Noto\'g\'ri token' },
@@ -72,7 +87,7 @@ export async function PATCH(request: NextRequest) {
     // Verify token
     let decoded: any;
     try {
-      decoded = jwt.verify(token, JWT_SECRET);
+      decoded = verifyToken(token);
     } catch (error) {
       return NextResponse.json(
         { error: 'Noto\'g\'ri token' },
@@ -109,7 +124,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (password) {
-      const bcrypt = require('bcrypt');
+      const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       users[userIndex].password = await bcrypt.hash(password, salt);
     }
