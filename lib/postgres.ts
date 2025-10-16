@@ -240,11 +240,6 @@ export class CourseService {
     }));
   }
 
-  static async findAll() {
-    const result = await pool.query('SELECT * FROM courses ORDER BY created_at DESC');
-    return result.rows;
-  }
-
   static async findById(id: number) {
     const result = await pool.query('SELECT * FROM courses WHERE id = $1', [id]);
     return result.rows[0] || null;
@@ -274,35 +269,9 @@ export class CourseService {
     values.push(id);
     
     const query = `UPDATE courses SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
-    const result = await pool.query(query, values);
+    console.log('Course update query:', query);
+    console.log('Course update values:', values);
     
-    return result.rows[0] || null;
-  }
-
-  static async update(id: number, updates: any) {
-    const fields = [];
-    const values = [];
-    let paramCount = 1;
-    
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value !== undefined) {
-        if (key === 'videos' || key === 'category') {
-          fields.push(`${key} = $${paramCount}`);
-          values.push(JSON.stringify(value));
-        } else {
-          fields.push(`${key} = $${paramCount}`);
-          values.push(value);
-        }
-        paramCount++;
-      }
-    });
-    
-    if (fields.length === 0) return null;
-    
-    fields.push(`updated_at = CURRENT_TIMESTAMP`);
-    values.push(id);
-    
-    const query = `UPDATE courses SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
     const result = await pool.query(query, values);
     
     return result.rows[0] || null;

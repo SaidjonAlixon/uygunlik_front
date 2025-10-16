@@ -11,6 +11,8 @@ export async function PATCH(
     const { title, description, price, category, videos } = body;
     const courseId = parseInt(params.id);
 
+    console.log('Course update request:', { courseId, body });
+
     if (isNaN(courseId)) {
       return NextResponse.json({ error: 'Noto\'g\'ri kurs ID' }, { status: 400 });
     }
@@ -22,6 +24,8 @@ export async function PATCH(
     if (category !== undefined) updates.category = Array.isArray(category) ? category : [];
     if (videos !== undefined) updates.videos = Array.isArray(videos) ? videos : [];
 
+    console.log('Course updates:', updates);
+
     const updatedCourse = await CourseService.update(courseId, updates);
     
     if (!updatedCourse) {
@@ -30,6 +34,7 @@ export async function PATCH(
 
     return NextResponse.json(updatedCourse, { status: 200 });
   } catch (error: any) {
+    console.error('Course update error:', error);
     return NextResponse.json({ error: error.message || 'Server error' }, { status: 500 });
   }
 }
