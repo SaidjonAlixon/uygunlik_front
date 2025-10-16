@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-
-// Mock database - production'da real database ishlatish kerak
-let users: any[] = [];
+import { findUserByEmail } from '@/lib/database';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -28,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find user by email
-    const user = users.find(u => u.email === email);
+    const user = findUserByEmail(email);
     if (!user) {
       return NextResponse.json(
         { error: 'Noto\'g\'ri email yoki parol' },

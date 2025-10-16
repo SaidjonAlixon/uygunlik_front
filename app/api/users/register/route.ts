@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-
-// Mock database - production'da real database ishlatish kerak
-let users: any[] = [];
-let nextId = 1;
+import { addUser, findUserByEmail } from '@/lib/database';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -60,7 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already exists
-    const existingUser = users.find(user => user.email === email);
+    const existingUser = findUserByEmail(email);
     if (existingUser) {
       return NextResponse.json(
         { error: 'Bu email bilan foydalanuvchi allaqachon mavjud' },
@@ -73,19 +70,15 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create user
-    const newUser = {
-      id: nextId++,
+    const newUser = addUser({
       first_name,
       last_name,
       email,
       password: hashedPassword,
       role: 'user',
       status: true,
-      created_at: new Date().toISOString(),
       courses: []
-    };
-
-    users.push(newUser);
+    });
 
     // Create JWT token
     const token = createToken({ id: newUser.id, email: newUser.email });

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Mock database - production'da real database ishlatish kerak
-let users: any[] = [];
+import { findUserById, updateUser, findUserByEmail } from '@/lib/database';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
@@ -46,7 +44,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Find user by ID
-    const user = users.find(u => u.id === decoded.id);
+    const user = findUserById(decoded.id);
     if (!user) {
       return NextResponse.json(
         { error: 'Foydalanuvchi topilmadi' },
@@ -96,8 +94,8 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Find user by ID
-    const userIndex = users.findIndex(u => u.id === decoded.id);
-    if (userIndex === -1) {
+    const existingUser = findUserById(decoded.id);
+    if (!existingUser) {
       return NextResponse.json(
         { error: 'Foydalanuvchi topilmadi' },
         { status: 404 }
@@ -107,32 +105,40 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json();
     const { first_name, last_name, email, password } = body;
 
-    // Update user fields
-    if (first_name) users[userIndex].first_name = first_name;
-    if (last_name) users[userIndex].last_name = last_name;
+    // Prepare updates
+    const updates: any = {};
+    if (first_name) updates.first_name = first_name;
+    if (last_name) updates.last_name = last_name;
     
-    if (email && email !== users[userIndex].email) {
+    if (email && email !== existingUser.email) {
       // Check if email is already in use
-      const existingUser = users.find(u => u.email === email && u.id !== decoded.id);
-      if (existingUser) {
+      const emailUser = findUserByEmail(email);
+      if (emailUser && emailUser.id !== decoded.id) {
         return NextResponse.json(
           { error: 'Bu email allaqachon ishlatilmoqda' },
           { status: 409 }
         );
       }
-      users[userIndex].email = email;
+      updates.email = email;
     }
 
     if (password) {
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
-      users[userIndex].password = await bcrypt.hash(password, salt);
+      updates.password = await bcrypt.hash(password, salt);
     }
 
-    users[userIndex].updated_at = new Date().toISOString();
+    // Update user
+    const updatedUser = updateUser(decoded.id, updates);
+    if (!updatedUser) {
+      return NextResponse.json(
+        { error: 'Foydalanuvchi yangilanmadi' },
+        { status: 500 }
+      );
+    }
 
     // Return updated user without password
-    const { password: _, ...userWithoutPassword } = users[userIndex];
+    const { password: _, ...userWithoutPassword } = updatedUser;
 
     return NextResponse.json(
       { 
