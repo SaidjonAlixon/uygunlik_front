@@ -294,6 +294,14 @@ export default function AdminPage() {
       alert("Iltimos, video fayli va sarlavhasini kiriting.");
       return;
     }
+
+    // Fayl hajmini tekshirish (5MB limit - Vercel uchun)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (currentVideoFile.size > maxSize) {
+      alert("Fayl juda katta. Maksimal hajm: 5MB. Iltimos, kichikroq video yuklang.");
+      return;
+    }
+
     setIsUploading(true);
     try {
       const createVideoDto: CreateVideoDto = {
@@ -1004,19 +1012,32 @@ export default function AdminPage() {
                 className="col-span-3"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="video-file" className="text-right">
-                Video fayli
-              </Label>
-              <Input
-                id="video-file"
-                type="file"
-                onChange={(e) =>
-                  setCurrentVideoFile(e.target.files ? e.target.files[0] : null)
-                }
-                className="col-span-3"
-              />
-            </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="video-file" className="text-right">
+                    Video fayli
+                  </Label>
+                  <div className="col-span-3">
+                    <Input
+                      id="video-file"
+                      type="file"
+                      accept="video/*"
+                      onChange={(e) =>
+                        setCurrentVideoFile(e.target.files ? e.target.files[0] : null)
+                      }
+                    />
+                    {currentVideoFile && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Fayl: {currentVideoFile.name} ({(currentVideoFile.size / 1024 / 1024).toFixed(2)} MB)
+                        {currentVideoFile.size > 5 * 1024 * 1024 && (
+                          <span className="text-red-500"> - Fayl juda katta!</span>
+                        )}
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-400 mt-1">
+                      Maksimal hajm: 5MB (Vercel chegarasi)
+                    </p>
+                  </div>
+                </div>
           </div>
           <div className="flex justify-end">
             <Button

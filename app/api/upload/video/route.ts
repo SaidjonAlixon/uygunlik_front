@@ -16,6 +16,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Fayl va sarlavha kerak' }, { status: 400 });
     }
 
+    // Fayl hajmini tekshirish (5MB limit - Vercel uchun)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      return NextResponse.json({ 
+        error: 'Fayl juda katta. Maksimal hajm: 5MB. Iltimos, kichikroq video yuklang.' 
+      }, { status: 413 });
+    }
+
     // Fayl nomini xavfsiz qilish
     const timestamp = Date.now();
     const safeFilename = `${timestamp}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
