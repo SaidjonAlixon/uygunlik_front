@@ -131,6 +131,31 @@ export default function WatchPage() {
             }}
           />
           {/* Overlay: share belgisini yashirish va bosilishini bloklash */}
+          {/* O'ng yuqori burchakdagi share belgisini bloklash */}
+          <div
+            className="absolute"
+            style={{
+              top: '10px',
+              right: '10px',
+              width: '60px',
+              height: '60px',
+              background: 'transparent',
+              pointerEvents: 'auto',
+              zIndex: 1000,
+              cursor: 'default'
+            }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              return false;
+            }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              return false;
+            }}
+          />
+          {/* Umumiy overlay: o'ng-bosish va boshqa bosilishlarni bloklash */}
           <div
             className="absolute inset-0"
             style={{
@@ -141,28 +166,10 @@ export default function WatchPage() {
               height: '100%',
               pointerEvents: 'none',
               background: 'transparent',
-              zIndex: 10
+              zIndex: 1
             }}
             onContextMenu={(e) => e.preventDefault()}
           />
-          {/* Share belgisini yashirish uchun CSS */}
-          <style jsx global>{`
-            iframe[src*="drive.google.com"] {
-              position: relative;
-            }
-            /* Google Drive share button yashirish */
-            iframe[src*="drive.google.com"]::after {
-              content: '';
-              position: absolute;
-              top: 0;
-              right: 0;
-              width: 60px;
-              height: 60px;
-              background: transparent;
-              pointer-events: none;
-              z-index: 1000;
-            }
-          `}</style>
         </div>
       </main>
     );
