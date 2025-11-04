@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user.store";
 import VideoService from "@/services/video.service";
 import { Video } from "@/types/video";
-import { isGoogleDriveUrl, extractGoogleDriveFileId, convertGoogleDriveUrl } from "@/lib/utils";
+import { isGoogleDriveUrl, extractGoogleDriveFileId, convertGoogleDriveUrl, getGoogleDriveEmbedUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { 
@@ -140,8 +140,15 @@ export default function WatchPage() {
         // Google Drive URL'ni to'g'ri preview formatiga o'tkazish
         if (fetchedVideo.url && isGoogleDriveUrl(fetchedVideo.url)) {
           const fileId = extractGoogleDriveFileId(fetchedVideo.url);
-          if (fileId && !fetchedVideo.url.includes('/preview')) {
-            fetchedVideo.url = `https://drive.google.com/file/d/${fileId}/preview`;
+          if (fileId) {
+            // Preview URL'ni to'g'ri formatda yaratish (video o'ynatish uchun)
+            if (!fetchedVideo.url.includes('/preview')) {
+              fetchedVideo.url = `https://drive.google.com/file/d/${fileId}/preview`;
+            }
+            // URL'ga parametr qo'shish (video o'ynatish uchun)
+            if (!fetchedVideo.url.includes('usp=')) {
+              fetchedVideo.url = `${fetchedVideo.url}${fetchedVideo.url.includes('?') ? '&' : '?'}usp=drivesdk`;
+            }
           }
         }
         
@@ -335,11 +342,11 @@ export default function WatchPage() {
       <div className="relative w-11/12 max-w-5xl z-20">
         {isGoogleDriveUrl(video.url) ? (
           // Google Drive preview iframe
-          <div className="relative w-full" style={{ aspectRatio: '16/9', paddingBottom: '56.25%' }}>
+          <div className="relative w-full bg-black rounded-xl shadow-xl overflow-hidden" style={{ aspectRatio: '16/9', paddingBottom: '56.25%' }}>
             <iframe
-              src={video.url}
-              className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl border-0"
-              allow="autoplay; encrypted-media; fullscreen"
+              src={getGoogleDriveEmbedUrl(video.url) || video.url}
+              className="absolute top-0 left-0 w-full h-full border-0"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowFullScreen
               frameBorder="0"
               scrolling="no"
@@ -348,7 +355,25 @@ export default function WatchPage() {
                 height: '100%',
                 minHeight: '500px'
               }}
+              onLoad={() => {
+                console.log('Google Drive iframe yuklandi');
+              }}
+              onError={(e) => {
+                console.error('Google Drive iframe xatosi:', e);
+              }}
             />
+            {/* Fallback: Agar iframe ishlamasa, to'g'ridan-to'g'ri link */}
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity">
+              <Button
+                onClick={() => {
+                  window.open(video.url, '_blank');
+                }}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                <Play className="h-4 w-4 mr-2" />
+                Videoni yangi oynada ochish
+              </Button>
+            </div>
           </div>
         ) : (
           <video
