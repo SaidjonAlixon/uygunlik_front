@@ -945,7 +945,7 @@ export default function AdminPage() {
                           <TableCell className="font-medium">
                             <Link
                               href={isGoogleDriveUrl(video.url || '') 
-                                ? `/watch/preview?id=${extractGoogleDriveFileId(video.url || '') || ''}`
+                                ? `/watch/${extractGoogleDriveFileId(video.url || '') || ''}`
                                 : `/watch/${video.filename || video.url?.split("/").pop() || ''}`
                               }
                               className="hover:underline"
