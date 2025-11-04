@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user.store";
 import VideoService from "@/services/video.service";
 import { Video } from "@/types/video";
-import { isGoogleDriveUrl, extractGoogleDriveFileId } from "@/lib/utils";
+import { isGoogleDriveUrl, extractGoogleDriveFileId, convertGoogleDriveUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { 
@@ -66,9 +66,25 @@ export default function WatchPage() {
           if (fileId) {
             // File ID bo'yicha video qidirish
             const allVideos = await VideoService.findAll();
-            fetchedVideo = allVideos.find(v => 
-              v.url && extractGoogleDriveFileId(v.url) === fileId
-            ) || null;
+            fetchedVideo = allVideos.find(v => {
+              if (!v.url) return false;
+              const videoFileId = extractGoogleDriveFileId(v.url);
+              return videoFileId === fileId;
+            }) || null;
+            
+            // Agar topilmasa, to'g'ridan-to'g'ri preview URL yaratish
+            if (!fetchedVideo && fileId) {
+              const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+              // Temporary video object yaratish
+              fetchedVideo = {
+                id: 0,
+                title: 'Google Drive Video',
+                url: previewUrl,
+                description: '',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              };
+            }
           } else {
             // Agar file ID yo'q bo'lsa, barcha Google Drive videolarni ko'rish
             const allVideos = await VideoService.findAll();
@@ -87,9 +103,24 @@ export default function WatchPage() {
           const fileId = extractGoogleDriveFileId(filenameStr);
           if (fileId) {
             const allVideos = await VideoService.findAll();
-            fetchedVideo = allVideos.find(v => 
-              v.url && extractGoogleDriveFileId(v.url) === fileId
-            ) || null;
+            fetchedVideo = allVideos.find(v => {
+              if (!v.url) return false;
+              const videoFileId = extractGoogleDriveFileId(v.url);
+              return videoFileId === fileId;
+            }) || null;
+            
+            // Agar topilmasa, to'g'ridan-to'g'ri preview URL yaratish
+            if (!fetchedVideo && fileId) {
+              const previewUrl = convertGoogleDriveUrl(filenameStr);
+              fetchedVideo = {
+                id: 0,
+                title: 'Google Drive Video',
+                url: previewUrl,
+                description: '',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              };
+            }
           }
           
           if (!fetchedVideo) {
@@ -104,6 +135,14 @@ export default function WatchPage() {
           setError("Video topilmadi.");
           setLoading(false);
           return;
+        }
+        
+        // Google Drive URL'ni to'g'ri preview formatiga o'tkazish
+        if (fetchedVideo.url && isGoogleDriveUrl(fetchedVideo.url)) {
+          const fileId = extractGoogleDriveFileId(fetchedVideo.url);
+          if (fileId && !fetchedVideo.url.includes('/preview')) {
+            fetchedVideo.url = `https://drive.google.com/file/d/${fileId}/preview`;
+          }
         }
         
         setVideo(fetchedVideo);
@@ -296,13 +335,21 @@ export default function WatchPage() {
       <div className="relative w-11/12 max-w-5xl z-20">
         {isGoogleDriveUrl(video.url) ? (
           // Google Drive preview iframe
-          <iframe
-            src={video.url}
-            className="w-full rounded-xl shadow-xl"
-            style={{ aspectRatio: '16/9', height: 'auto' }}
-            allow="autoplay; encrypted-media"
-            allowFullScreen
-          />
+          <div className="relative w-full" style={{ aspectRatio: '16/9', paddingBottom: '56.25%' }}>
+            <iframe
+              src={video.url}
+              className="absolute top-0 left-0 w-full h-full rounded-xl shadow-xl border-0"
+              allow="autoplay; encrypted-media; fullscreen"
+              allowFullScreen
+              frameBorder="0"
+              scrolling="no"
+              style={{ 
+                width: '100%', 
+                height: '100%',
+                minHeight: '500px'
+              }}
+            />
+          </div>
         ) : (
           <video
             ref={videoRef}
