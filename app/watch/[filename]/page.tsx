@@ -141,14 +141,9 @@ export default function WatchPage() {
         if (fetchedVideo.url && isGoogleDriveUrl(fetchedVideo.url)) {
           const fileId = extractGoogleDriveFileId(fetchedVideo.url);
           if (fileId) {
-            // Preview URL'ni to'g'ri formatda yaratish (video o'ynatish uchun)
-            if (!fetchedVideo.url.includes('/preview')) {
-              fetchedVideo.url = `https://drive.google.com/file/d/${fileId}/preview`;
-            }
-            // URL'ga parametr qo'shish (video o'ynatish uchun)
-            if (!fetchedVideo.url.includes('usp=')) {
-              fetchedVideo.url = `${fetchedVideo.url}${fetchedVideo.url.includes('?') ? '&' : '?'}usp=drivesdk`;
-            }
+            // To'g'ridan-to'g'ri Google Drive preview URL (iframe uchun)
+            // Bu format to'g'ridan-to'g'ri streaming uchun ishlaydi
+            fetchedVideo.url = `https://drive.google.com/file/d/${fileId}/preview`;
           }
         }
         
@@ -341,39 +336,20 @@ export default function WatchPage() {
       {/* Video container */}
       <div className="relative w-11/12 max-w-5xl z-20">
         {isGoogleDriveUrl(video.url) ? (
-          // Google Drive preview iframe
+          // Google Drive preview iframe - to'g'ridan-to'g'ri streaming
           <div className="relative w-full bg-black rounded-xl shadow-xl overflow-hidden" style={{ aspectRatio: '16/9', paddingBottom: '56.25%' }}>
             <iframe
-              src={getGoogleDriveEmbedUrl(video.url) || video.url}
+              src={video.url}
               className="absolute top-0 left-0 w-full h-full border-0"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allow="autoplay"
               allowFullScreen
               frameBorder="0"
-              scrolling="no"
               style={{ 
                 width: '100%', 
                 height: '100%',
                 minHeight: '500px'
               }}
-              onLoad={() => {
-                console.log('Google Drive iframe yuklandi');
-              }}
-              onError={(e) => {
-                console.error('Google Drive iframe xatosi:', e);
-              }}
             />
-            {/* Fallback: Agar iframe ishlamasa, to'g'ridan-to'g'ri link */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity">
-              <Button
-                onClick={() => {
-                  window.open(video.url, '_blank');
-                }}
-                className="bg-red-600 hover:bg-red-700"
-              >
-                <Play className="h-4 w-4 mr-2" />
-                Videoni yangi oynada ochish
-              </Button>
-            </div>
           </div>
         ) : (
           <video

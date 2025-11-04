@@ -32,9 +32,9 @@ export function convertGoogleDriveUrl(url: string): string {
 }
 
 /**
- * Google Drive videoni to'g'ridan-to'g'ri o'ynatish uchun embed URL yaratadi
+ * Google Drive videoni to'g'ridan-to'g'ri o'ynatish uchun preview URL yaratadi
  * @param url - Google Drive file URL
- * @returns Embed URL yoki null
+ * @returns Preview URL yoki null
  */
 export function getGoogleDriveEmbedUrl(url: string): string | null {
   if (!url) return null;
@@ -42,8 +42,9 @@ export function getGoogleDriveEmbedUrl(url: string): string | null {
   const fileId = extractGoogleDriveFileId(url);
   if (!fileId) return null;
   
-  // Google Drive embed URL (video o'ynatish uchun)
-  return `https://drive.google.com/file/d/${fileId}/preview?usp=drivesdk`;
+  // To'g'ridan-to'g'ri Google Drive preview URL (iframe uchun)
+  // Bu format to'g'ridan-to'g'ri streaming uchun ishlaydi
+  return `https://drive.google.com/file/d/${fileId}/preview`;
 }
 
 /**
