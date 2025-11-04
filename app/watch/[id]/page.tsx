@@ -124,12 +124,45 @@ export default function WatchPage() {
             allow="autoplay; fullscreen"
             frameBorder="0"
             allowFullScreen
+            style={{ 
+              width: '100%', 
+              height: '100%',
+              pointerEvents: 'auto'
+            }}
           />
-          {/* O'ng-bosishni bloklash */}
+          {/* Overlay: share belgisini yashirish va bosilishini bloklash */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              background: 'transparent',
+              zIndex: 10
+            }}
             onContextMenu={(e) => e.preventDefault()}
           />
+          {/* Share belgisini yashirish uchun CSS */}
+          <style jsx global>{`
+            iframe[src*="drive.google.com"] {
+              position: relative;
+            }
+            /* Google Drive share button yashirish */
+            iframe[src*="drive.google.com"]::after {
+              content: '';
+              position: absolute;
+              top: 0;
+              right: 0;
+              width: 60px;
+              height: 60px;
+              background: transparent;
+              pointer-events: none;
+              z-index: 1000;
+            }
+          `}</style>
         </div>
       </main>
     );
