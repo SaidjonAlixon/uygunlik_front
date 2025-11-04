@@ -54,7 +54,6 @@ import CourseService, {
 } from "@/services/course.service";
 import VideoService, {
   CreateVideoDto,
-  UpdateVideoDto,
 } from "@/services/video.service";
 import UserService from "@/services/user.service";
 import { Course } from "@/types/course";
@@ -66,6 +65,10 @@ import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
 import { convertGoogleDriveUrl, isGoogleDriveUrl } from "@/lib/utils";
+import TariffService from "@/services/tariff.service";
+import LessonService from "@/services/lesson.service";
+import { Tariff } from "@/types/tariff";
+import { Lesson } from "@/types/lesson";
 
 export default function AdminPage() {
   const { user, clearUser } = useUserStore();
@@ -83,6 +86,9 @@ export default function AdminPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [videos, setVideos] = useState<Video[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [tariffs, setTariffs] = useState<Tariff[]>([]);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [selectedTariff, setSelectedTariff] = useState<Tariff | null>(null);
 
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -92,6 +98,8 @@ export default function AdminPage() {
   const [isVideoUploadFormOpen, setIsVideoUploadFormOpen] = useState(false);
   const [isVideoEditFormOpen, setIsVideoEditFormOpen] = useState(false);
   const [isUserCoursesFormOpen, setIsUserCoursesFormOpen] = useState(false);
+  const [isLessonFormOpen, setIsLessonFormOpen] = useState(false);
+  const [isLessonsViewOpen, setIsLessonsViewOpen] = useState(false);
 
   const [videosToAddToForm, setVideosToAddToForm] = useState<string[]>([]);
 
@@ -112,6 +120,14 @@ export default function AdminPage() {
   const [newVideoTitle, setNewVideoTitle] = useState("");
   const [newVideoUrl, setNewVideoUrl] = useState("");
   const [newVideoDescription, setNewVideoDescription] = useState("");
+
+  // Lesson form states
+  const [lessonTitle, setLessonTitle] = useState("");
+  const [lessonDescription, setLessonDescription] = useState("");
+  const [lessonVideoUrl, setLessonVideoUrl] = useState("");
+  const [lessonOrderNumber, setLessonOrderNumber] = useState<number>(1);
+  const [lessonAdditionalResources, setLessonAdditionalResources] = useState<File[]>([]);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
 
   // User management states
   const [usersSearchTerm, setUsersSearchTerm] = useState("");
@@ -187,6 +203,24 @@ export default function AdminPage() {
       setVideos(fetchedVideos);
     } catch (error) {
       console.error("Videolarni yuklashda xato:", error);
+    }
+  };
+
+  const fetchTariffs = async () => {
+    try {
+      const fetchedTariffs = await TariffService.findAll();
+      setTariffs(fetchedTariffs);
+    } catch (error) {
+      console.error("Tariflarni yuklashda xato:", error);
+    }
+  };
+
+  const fetchLessons = async (tariffId: number) => {
+    try {
+      const fetchedLessons = await LessonService.findAllByTariff(String(tariffId));
+      setLessons(fetchedLessons);
+    } catch (error) {
+      console.error("Darslarni yuklashda xato:", error);
     }
   };
 
@@ -397,24 +431,6 @@ export default function AdminPage() {
     setIsVideoEditFormOpen(true);
   };
 
-  const handleUpdateVideo = async () => {
-    if (!selectedVideo) return;
-    try {
-      const updateVideoDto: UpdateVideoDto = {
-        title: videoTitle,
-        description: videoDescription,
-      };
-      await VideoService.update(String(selectedVideo.id), updateVideoDto);
-      fetchVideos();
-      setIsVideoEditFormOpen(false);
-      setSelectedVideo(null);
-      setVideoTitle("");
-      setVideoDescription("");
-    } catch (error) {
-      console.error("Videoni yangilashda xato:", error);
-    }
-  };
-
   const handleDeleteVideo = async (id: string) => {
     if (
       window.confirm("Siz rostdan ham video ma'lumotlarini o'chirmoqchimisiz?")
@@ -614,6 +630,84 @@ export default function AdminPage() {
             <TabsTrigger value="videos">Videolar</TabsTrigger>
             <TabsTrigger value="settings">Sozlamalar</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="tariffs">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Tariflar</CardTitle>
+                    <CardDescription>
+                      Kurs tariflarini boshqarish va darslarni ko'rish
+                    </CardDescription>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      // Yangi tarif qo'shish funksiyasi
+                      toast({
+                        title: "Xabar",
+                        description: "Yangi tarif qo'shish funksiyasi tez orada qo'shiladi",
+                      });
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <PlusCircle className="h-4 w-4 mr-2" />
+                    Yangi tarif qo'shish
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-4 gap-6">
+                  {tariffs.map((tariff) => (
+                    <Card key={tariff.id} className="relative">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <CardTitle className="text-xl">{tariff.name}</CardTitle>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0"
+                            onClick={() => {
+                              // Tarifni tahrirlash
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <CardDescription className="mt-2">
+                          {tariff.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="mb-4">
+                          <p className="text-3xl font-bold text-blue-600">
+                            {tariff.price.toLocaleString()} so'm
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between mb-4">
+                          <Badge variant="outline" className="text-sm">
+                            <BookOpen className="h-3 w-3 mr-1" />
+                            {tariff.lessons_count || 0} ta dars
+                          </Badge>
+                        </div>
+                        <Button
+                          onClick={async () => {
+                            setSelectedTariff(tariff);
+                            await fetchLessons(tariff.id);
+                            setIsLessonsViewOpen(true);
+                          }}
+                          className="w-full bg-blue-600 hover:bg-blue-700"
+                        >
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          Darslarni boshqarish
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           <TabsContent value="payments">
             {/* ... Payments Tab ... */}
@@ -1209,14 +1303,6 @@ export default function AdminPage() {
               />
             </div>
           </div>
-          <div className="flex justify-end">
-            <Button
-              onClick={handleUpdateVideo}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              O'zgarishlarni saqlash
-            </Button>
-          </div>
         </DialogContent>
       </Dialog>
       <Dialog
@@ -1311,6 +1397,230 @@ export default function AdminPage() {
             >
               Saqlash
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Darslar ko'rish va boshqarish Dialog */}
+      <Dialog open={isLessonsViewOpen} onOpenChange={setIsLessonsViewOpen}>
+        <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
+          <DialogHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle>
+                  {selectedTariff?.name} - Darslar
+                </DialogTitle>
+                <DialogDescription>
+                  {lessons.length} ta dars • {selectedTariff?.price.toLocaleString()} so'm
+                </DialogDescription>
+              </div>
+              <Button
+                onClick={() => {
+                  setSelectedLesson(null);
+                  setLessonTitle("");
+                  setLessonDescription("");
+                  setLessonVideoUrl("");
+                  setLessonOrderNumber(lessons.length + 1);
+                  setLessonAdditionalResources([]);
+                  setIsLessonFormOpen(true);
+                }}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Yangi dars qo'shish
+              </Button>
+            </div>
+          </DialogHeader>
+          <div className="flex-grow overflow-y-auto pr-6">
+            {lessons.length === 0 ? (
+              <Card className="p-12 text-center">
+                <BookOpen className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Darslar yo'q</h3>
+                <p className="text-gray-600 mb-6">
+                  Bu tarifda hozircha darslar mavjud emas.
+                </p>
+                <Button
+                  onClick={() => {
+                    setSelectedLesson(null);
+                    setLessonTitle("");
+                    setLessonDescription("");
+                    setLessonVideoUrl("");
+                    setLessonOrderNumber(1);
+                    setLessonAdditionalResources([]);
+                    setIsLessonFormOpen(true);
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  Birinchi darsni qo'shish
+                </Button>
+              </Card>
+            ) : (
+              <div className="space-y-4">
+                {lessons.map((lesson) => (
+                  <Card key={lesson.id}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Badge variant="outline">#{lesson.order_number}</Badge>
+                            <h4 className="font-semibold">{lesson.title}</h4>
+                          </div>
+                          {lesson.description && (
+                            <p className="text-sm text-gray-600 mb-2">{lesson.description}</p>
+                          )}
+                          {lesson.video_url && (
+                            <Badge variant="secondary" className="text-xs">
+                              Video mavjud
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedLesson(lesson);
+                              setLessonTitle(lesson.title);
+                              setLessonDescription(lesson.description || "");
+                              setLessonVideoUrl(lesson.video_url || "");
+                              setLessonOrderNumber(lesson.order_number);
+                              setIsLessonFormOpen(true);
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 border-red-200 hover:bg-red-50"
+                            onClick={async () => {
+                              if (window.confirm("Haqiqatan ham bu darsni o'chirmoqchimisiz?")) {
+                                try {
+                                  await LessonService.remove(String(lesson.id));
+                                  await fetchLessons(selectedTariff!.id);
+                                  toast({
+                                    title: "Muvaffaqiyatli!",
+                                    description: "Dars o'chirildi",
+                                  });
+                                } catch (error) {
+                                  console.error("Darsni o'chirishda xato:", error);
+                                  toast({
+                                    title: "Xatolik",
+                                    description: "Darsni o'chirishda xatolik yuz berdi",
+                                    variant: "destructive",
+                                  });
+                                }
+                              }
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Yangi dars qo'shish Dialog */}
+      <Dialog open={isLessonFormOpen} onOpenChange={setIsLessonFormOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Yangi dars qo'shish</DialogTitle>
+            <DialogDescription>
+              Dars ma'lumotlarini to'ldiring
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div>
+              <Label htmlFor="lesson-title">
+                Sarlavha (majburiy)
+              </Label>
+              <Input
+                id="lesson-title"
+                value={lessonTitle}
+                onChange={(e) => setLessonTitle(e.target.value)}
+                placeholder="Dars sarlavhasi"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="lesson-description">
+                Tavsif (majburiy)
+              </Label>
+              <Textarea
+                id="lesson-description"
+                value={lessonDescription}
+                onChange={(e) => setLessonDescription(e.target.value)}
+                placeholder="Dars haqida batafsil ma'lumot"
+                className="mt-1"
+                rows={4}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {lessonDescription.length} belgi
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="lesson-video-url">
+                Video havola (ixtiyoriy)
+              </Label>
+              <Input
+                id="lesson-video-url"
+                value={lessonVideoUrl}
+                onChange={(e) => setLessonVideoUrl(e.target.value)}
+                placeholder="Google Drive havolasi yoki to'g'ridan-to'g'ri video URL"
+                className="mt-1"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Google Drive preview linkini kiriting: https://drive.google.com/file/d/VIDEO_ID/preview
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="lesson-order">
+                Tartib raqami
+              </Label>
+              <Input
+                id="lesson-order"
+                type="number"
+                value={lessonOrderNumber}
+                onChange={(e) => setLessonOrderNumber(parseInt(e.target.value) || 1)}
+                className="mt-1"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Darsning tartibi (1, 2, 3, ...)
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="lesson-resources">
+                Qo'shimcha resurslar (ixtiyoriy)
+              </Label>
+              <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <p className="text-sm text-gray-600 mb-1">
+                  PDF, DOCX, ZIP fayllarni torting yoki tanlang
+                </p>
+                <p className="text-xs text-gray-500">
+                  Bir nechta faylni tanlashingiz mumkin
+                </p>
+                <Input
+                  id="lesson-resources"
+                  type="file"
+                  multiple
+                  accept=".pdf,.doc,.docx,.zip"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setLessonAdditionalResources(Array.from(e.target.files));
+                    }
+                  }}
+                  className="mt-4"
+                />
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

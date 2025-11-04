@@ -76,6 +76,47 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Create tariffs table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tariffs (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL UNIQUE,
+        description TEXT,
+        price DECIMAL(10,2) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create lessons table (darslar)
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS lessons (
+        id SERIAL PRIMARY KEY,
+        tariff_id INTEGER REFERENCES tariffs(id) ON DELETE CASCADE,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        video_url VARCHAR(500),
+        order_number INTEGER DEFAULT 0,
+        additional_resources JSONB DEFAULT '[]'::jsonb,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create default tariffs if not exists
+    const tariffsExist = await pool.query('SELECT COUNT(*) FROM tariffs');
+    if (parseInt(tariffsExist.rows[0].count) === 0) {
+      await pool.query(`
+        INSERT INTO tariffs (name, description, price)
+        VALUES 
+          ('BAZZA', 'Boshlang''ich darajadagi kurs tarifi', 50000),
+          ('STANDART', 'Standart darajadagi kurs tarifi', 150000),
+          ('OPTIMAL', 'Optimal darajadagi kurs tarifi', 250000),
+          ('VIP', 'VIP darajadagi kurs tarifi - barcha imkoniyatlar bilan', 500000)
+      `);
+      console.log('✅ Default tariffs created');
+    }
+
     // Create default admin user if not exists
     const adminExists = await pool.query('SELECT id FROM users WHERE email = $1', ['admin@uygunlik.uz']);
     if (adminExists.rows.length === 0) {
@@ -386,6 +427,157 @@ export class VideoService {
 
   static async delete(id: number) {
     const result = await pool.query('DELETE FROM videos WHERE id = $1 RETURNING *', [id]);
+    return result.rows[0] || null;
+  }
+}
+
+// Tariff operations
+export class TariffService {
+  static async findAll() {
+    const result = await pool.query(`
+      SELECT t.*, 
+        COUNT(l.id) as lessons_count
+      FROM tariffs t
+      LEFT JOIN lessons l ON t.id = l.tariff_id
+      GROUP BY t.id
+      ORDER BY t.price ASC
+    `);
+    return result.rows.map(row => ({
+      ...row,
+      lessons_count: parseInt(row.lessons_count) || 0
+    }));
+  }
+
+  static async findById(id: number) {
+    const result = await pool.query('SELECT * FROM tariffs WHERE id = $1', [id]);
+    return result.rows[0] || null;
+  }
+
+  static async create(tariffData: {
+    name: string;
+    description?: string;
+    price: number;
+  }) {
+    const result = await pool.query(`
+      INSERT INTO tariffs (name, description, price)
+      VALUES ($1, $2, $3)
+      RETURNING *
+    `, [
+      tariffData.name,
+      tariffData.description || '',
+      tariffData.price
+    ]);
+    return result.rows[0];
+  }
+
+  static async update(id: number, updates: {
+    name?: string;
+    description?: string;
+    price?: number;
+  }) {
+    const fields = [];
+    const values = [];
+    let paramCount = 1;
+    
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value !== undefined) {
+        fields.push(`${key} = $${paramCount}`);
+        values.push(value);
+        paramCount++;
+      }
+    });
+    
+    if (fields.length === 0) return null;
+    
+    fields.push(`updated_at = CURRENT_TIMESTAMP`);
+    values.push(id);
+    
+    const query = `UPDATE tariffs SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
+    const result = await pool.query(query, values);
+    return result.rows[0] || null;
+  }
+
+  static async delete(id: number) {
+    const result = await pool.query('DELETE FROM tariffs WHERE id = $1 RETURNING *', [id]);
+    return result.rows[0] || null;
+  }
+}
+
+// Lesson operations
+export class LessonService {
+  static async findAllByTariff(tariffId: number) {
+    const result = await pool.query(`
+      SELECT * FROM lessons 
+      WHERE tariff_id = $1 
+      ORDER BY order_number ASC, created_at ASC
+    `, [tariffId]);
+    return result.rows;
+  }
+
+  static async findById(id: number) {
+    const result = await pool.query('SELECT * FROM lessons WHERE id = $1', [id]);
+    return result.rows[0] || null;
+  }
+
+  static async create(lessonData: {
+    tariff_id: number;
+    title: string;
+    description?: string;
+    video_url?: string;
+    order_number?: number;
+    additional_resources?: any[];
+  }) {
+    const result = await pool.query(`
+      INSERT INTO lessons (tariff_id, title, description, video_url, order_number, additional_resources)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *
+    `, [
+      lessonData.tariff_id,
+      lessonData.title,
+      lessonData.description || '',
+      lessonData.video_url || '',
+      lessonData.order_number || 0,
+      JSON.stringify(lessonData.additional_resources || [])
+    ]);
+    return result.rows[0];
+  }
+
+  static async update(id: number, updates: {
+    title?: string;
+    description?: string;
+    video_url?: string;
+    order_number?: number;
+    additional_resources?: any[];
+  }) {
+    const fields = [];
+    const values = [];
+    let paramCount = 1;
+    
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value !== undefined) {
+        if (key === 'additional_resources') {
+          fields.push(`${key} = $${paramCount}`);
+          values.push(JSON.stringify(value));
+        } else {
+          fields.push(`${key} = $${paramCount}`);
+          values.push(value);
+        }
+        paramCount++;
+      }
+    });
+    
+    if (fields.length === 0) return null;
+    
+    fields.push(`updated_at = CURRENT_TIMESTAMP`);
+    values.push(id);
+    
+    const query = `UPDATE lessons SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`;
+    const result = await pool.query(query, values);
+    return result.rows[0] || null;
+  }
+
+  static async delete(id: number) {
+    const result = await pool.query('DELETE FROM lessons WHERE id = $1 RETURNING *', [id]);
     return result.rows[0] || null;
   }
 }
