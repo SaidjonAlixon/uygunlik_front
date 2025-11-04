@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useUserStore } from "@/store/user.store";
 import VideoService from "@/services/video.service";
 import { Video } from "@/types/video";
-import { isGoogleDriveUrl } from "@/lib/utils";
+import { isGoogleDriveUrl, extractGoogleDriveFileId } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { 
@@ -54,11 +54,62 @@ export default function WatchPage() {
 
     const fetchVideo = async () => {
       try {
-        const fetchedVideo = await VideoService.findByFilename(filename as string);
+        let fetchedVideo;
+        const filenameStr = filename as string;
+        
+        // Agar filename 'preview' bo'lsa, Google Drive file ID ni URL'dan olish
+        if (filenameStr === 'preview') {
+          // URL parametrlaridan Google Drive file ID ni olish
+          const urlParams = new URLSearchParams(window.location.search);
+          const fileId = urlParams.get('id');
+          
+          if (fileId) {
+            // File ID bo'yicha video qidirish
+            const allVideos = await VideoService.findAll();
+            fetchedVideo = allVideos.find(v => 
+              v.url && extractGoogleDriveFileId(v.url) === fileId
+            ) || null;
+          } else {
+            // Agar file ID yo'q bo'lsa, barcha Google Drive videolarni ko'rish
+            const allVideos = await VideoService.findAll();
+            fetchedVideo = allVideos.find(v => 
+              v.url && v.url.includes('drive.google.com/file/d/')
+            ) || null;
+          }
+          
+          if (!fetchedVideo) {
+            setError("Video topilmadi. Google Drive video havolasi mavjud emas.");
+            setLoading(false);
+            return;
+          }
+        } else if (filenameStr.includes('drive.google.com')) {
+          // To'liq Google Drive URL bo'lsa
+          const fileId = extractGoogleDriveFileId(filenameStr);
+          if (fileId) {
+            const allVideos = await VideoService.findAll();
+            fetchedVideo = allVideos.find(v => 
+              v.url && extractGoogleDriveFileId(v.url) === fileId
+            ) || null;
+          }
+          
+          if (!fetchedVideo) {
+            fetchedVideo = await VideoService.findByFilename(filenameStr);
+          }
+        } else {
+          // Oddiy filename
+          fetchedVideo = await VideoService.findByFilename(filenameStr);
+        }
+        
+        if (!fetchedVideo) {
+          setError("Video topilmadi.");
+          setLoading(false);
+          return;
+        }
+        
         setVideo(fetchedVideo);
       } catch (err) {
         console.error("Video metadata error:", err);
-        setError("Videoni yuklashda xatolik yuz berdi. Qayta urinib ko‘ring.");
+        setError("Videoni yuklashda xatolik yuz berdi. Qayta urinib ko'ring.");
       } finally {
         setLoading(false);
       }

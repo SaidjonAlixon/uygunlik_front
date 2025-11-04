@@ -39,3 +39,15 @@ export function convertGoogleDriveUrl(url: string): string {
 export function isGoogleDriveUrl(url: string): boolean {
   return url.includes('drive.google.com/file/d/');
 }
+
+/**
+ * Google Drive URL'dan file ID ni ajratib oladi
+ * @param url - Google Drive URL
+ * @returns File ID yoki null
+ */
+export function extractGoogleDriveFileId(url: string): string | null {
+  if (!url) return null;
+  
+  const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  return match ? match[1] : null;
+}

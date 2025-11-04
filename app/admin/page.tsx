@@ -64,7 +64,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { convertGoogleDriveUrl, isGoogleDriveUrl } from "@/lib/utils";
+import { convertGoogleDriveUrl, isGoogleDriveUrl, extractGoogleDriveFileId } from "@/lib/utils";
 import TariffService from "@/services/tariff.service";
 import LessonService from "@/services/lesson.service";
 import { Tariff } from "@/types/tariff";
@@ -513,7 +513,7 @@ export default function AdminPage() {
 
   const stats = {
     totalUsers: users.length,
-    activeUsers: users.filter(u => u.status === 'active').length,
+    activeUsers: users.filter(u => u.status === true).length,
     pendingPayments: 0,
     totalRevenue: "0 so'm",
   };
@@ -944,7 +944,10 @@ export default function AdminPage() {
                         <TableRow key={video.id}>
                           <TableCell className="font-medium">
                             <Link
-                              href={`/watch/${video.url.split("/").pop()}`}
+                              href={isGoogleDriveUrl(video.url || '') 
+                                ? `/watch/preview?id=${extractGoogleDriveFileId(video.url || '') || ''}`
+                                : `/watch/${video.filename || video.url?.split("/").pop() || ''}`
+                              }
                               className="hover:underline"
                               target="_blank"
                             >
@@ -1072,7 +1075,10 @@ export default function AdminPage() {
                           <TableRow key={videoId}>
                             <TableCell className="font-medium">
                               <Link
-                                href={`/watch/${video.url.split("/").pop()}`}
+                                href={isGoogleDriveUrl(video.url || '') 
+                                  ? `/watch/preview?id=${extractGoogleDriveFileId(video.url || '') || ''}`
+                                  : `/watch/${video.filename || video.url?.split("/").pop() || ''}`
+                                }
                                 className="hover:underline"
                                 target="_blank"
                               >

@@ -4,6 +4,7 @@ export interface Video {
   title: string;
   description?: string;
   url: string;
+  filename?: string; // Database'da mavjud
   duration?: number;
   createdAt: string;
   updatedAt: string;

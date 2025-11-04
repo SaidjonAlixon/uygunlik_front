@@ -56,8 +56,25 @@ class VideoService {
   }
 
   async findByFilename(filename: string): Promise<Video> {
-    const response = await api.get(`/videos/by-filename/${filename}`);
-    return response.data;
+    try {
+      const response = await api.get(`/videos/by-filename/${encodeURIComponent(filename)}`);
+      return response.data;
+    } catch (error: any) {
+      // Agar filename bo'yicha topilmasa, barcha videolarni ko'rib qidirish
+      if (error.response?.status === 404) {
+        const allVideos = await this.findAll();
+        const foundVideo = allVideos.find(v => 
+          v.url && (
+            v.url.includes(filename) || 
+            filename.includes('preview') && v.url.includes('drive.google.com')
+          )
+        );
+        if (foundVideo) {
+          return foundVideo;
+        }
+      }
+      throw error;
+    }
   }
 
   async update(id: string, updateVideoDto: UpdateVideoDto): Promise<Video> {

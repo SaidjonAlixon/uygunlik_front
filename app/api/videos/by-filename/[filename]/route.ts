@@ -7,7 +7,25 @@ export async function GET(
 ) {
   try {
     await initializeDatabase();
-    const video = await VideoService.findByFilename(params.filename);
+    
+    // Avval filename bo'yicha qidirish
+    let video = await VideoService.findByFilename(params.filename);
+    
+    // Agar topilmasa, URL bo'yicha qidirish (Google Drive uchun)
+    if (!video && params.filename.includes('drive.google.com')) {
+      video = await VideoService.findByUrl(params.filename);
+    }
+    
+    // Agar hali ham topilmasa, barcha videolarni ko'rib, Google Drive URL'ga ega videoni topish
+    if (!video) {
+      const allVideos = await VideoService.findAll();
+      video = allVideos.find(v => 
+        v.url && (
+          v.url.includes(params.filename) || 
+          params.filename.includes('preview') && v.url.includes('drive.google.com')
+        )
+      ) || null;
+    }
     
     if (!video) {
       return NextResponse.json({ error: 'Video topilmadi' }, { status: 404 });

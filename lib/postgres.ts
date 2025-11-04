@@ -377,6 +377,11 @@ export class VideoService {
     return result.rows[0] || null;
   }
 
+  static async findByUrl(url: string) {
+    const result = await pool.query('SELECT * FROM videos WHERE url = $1 OR url LIKE $2', [url, `%${url}%`]);
+    return result.rows[0] || null;
+  }
+
   static async update(id: number, updates: any) {
     const fields = [];
     const values = [];
