@@ -157,7 +157,7 @@ export default function AdminPage() {
       router.push("/dashboard");
       return;
     }
-    Promise.all([fetchCourses(), fetchVideos()]).finally(() =>
+    Promise.all([fetchCourses(), fetchVideos(), fetchTariffs()]).finally(() =>
       setLoading(false)
     );
   }, [user, router]);
@@ -216,9 +216,16 @@ export default function AdminPage() {
   const fetchTariffs = async () => {
     try {
       const fetchedTariffs = await TariffService.findAll();
-      setTariffs(fetchedTariffs);
-    } catch (error) {
+      console.log("Fetched tariffs:", fetchedTariffs);
+      setTariffs(fetchedTariffs || []);
+    } catch (error: any) {
       console.error("Tariflarni yuklashda xato:", error);
+      toast({
+        title: "Xatolik",
+        description: error?.response?.data?.error || error?.message || "Tariflarni yuklashda xatolik yuz berdi",
+        variant: "destructive",
+      });
+      setTariffs([]);
     }
   };
 
@@ -688,8 +695,25 @@ export default function AdminPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-4 gap-6">
-                  {tariffs.map((tariff) => (
+                {loading ? (
+                  <div className="text-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-blue-600" />
+                    <p className="mt-2 text-gray-600">Tariflar yuklanmoqda...</p>
+                  </div>
+                ) : tariffs.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-600">Hozircha tariflar mavjud emas</p>
+                    <Button
+                      onClick={() => setIsTariffFormOpen(true)}
+                      className="mt-4 bg-blue-600 hover:bg-blue-700"
+                    >
+                      <PlusCircle className="h-4 w-4 mr-2" />
+                      Birinchi tarifni qo'shish
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid md:grid-cols-4 gap-6">
+                    {tariffs.map((tariff) => (
                     <Card key={tariff.id} className="relative">
                       <CardHeader>
                         <div className="flex items-center justify-between">
@@ -734,8 +758,9 @@ export default function AdminPage() {
                         </Button>
                       </CardContent>
                     </Card>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
