@@ -100,6 +100,12 @@ export default function AdminPage() {
   const [isUserCoursesFormOpen, setIsUserCoursesFormOpen] = useState(false);
   const [isLessonFormOpen, setIsLessonFormOpen] = useState(false);
   const [isLessonsViewOpen, setIsLessonsViewOpen] = useState(false);
+  const [isTariffFormOpen, setIsTariffFormOpen] = useState(false);
+
+  // Tariff create form states
+  const [tariffName, setTariffName] = useState("");
+  const [tariffDescription, setTariffDescription] = useState("");
+  const [tariffPrice, setTariffPrice] = useState<number>(0);
 
   const [videosToAddToForm, setVideosToAddToForm] = useState<string[]>([]);
 
@@ -221,6 +227,33 @@ export default function AdminPage() {
       setLessons(fetchedLessons);
     } catch (error) {
       console.error("Darslarni yuklashda xato:", error);
+    }
+  };
+
+  const handleCreateTariff = async () => {
+    if (!tariffName || tariffPrice <= 0) {
+      toast({
+        title: "Xatolik",
+        description: "Tarif nomi va narxi kiritilishi kerak",
+        variant: "destructive",
+      });
+      return;
+    }
+    try {
+      await TariffService.create({
+        name: tariffName,
+        description: tariffDescription,
+        price: tariffPrice,
+      });
+      await fetchTariffs();
+      setTariffName("");
+      setTariffDescription("");
+      setTariffPrice(0);
+      setIsTariffFormOpen(false);
+      toast({ title: "Muvaffaqiyatli!", description: "Tarif yaratildi" });
+    } catch (error) {
+      console.error("Tarif yaratishda xato:", error);
+      toast({ title: "Xatolik", description: "Tarif yaratilmadi", variant: "destructive" });
     }
   };
 
@@ -622,12 +655,11 @@ export default function AdminPage() {
           </Card>
         </div>
 
-        <Tabs defaultValue="courses">
+        <Tabs defaultValue="tariffs">
           <TabsList className="mb-6">
+            <TabsTrigger value="tariffs">Darslik</TabsTrigger>
             <TabsTrigger value="payments">To'lovlar</TabsTrigger>
             <TabsTrigger value="users">Foydalanuvchilar</TabsTrigger>
-            <TabsTrigger value="courses">Kurslar</TabsTrigger>
-            <TabsTrigger value="videos">Videolar</TabsTrigger>
             <TabsTrigger value="settings">Sozlamalar</TabsTrigger>
           </TabsList>
 
@@ -636,19 +668,13 @@ export default function AdminPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>Tariflar</CardTitle>
+                    <CardTitle>Darslik</CardTitle>
                     <CardDescription>
-                      Kurs tariflarini boshqarish va darslarni ko'rish
+                      Tariflar va ularning ichidagi darslarni boshqaring
                     </CardDescription>
                   </div>
                   <Button
-                    onClick={() => {
-                      // Yangi tarif qo'shish funksiyasi
-                      toast({
-                        title: "Xabar",
-                        description: "Yangi tarif qo'shish funksiyasi tez orada qo'shiladi",
-                      });
-                    }}
+                    onClick={() => setIsTariffFormOpen(true)}
                     className="bg-blue-600 hover:bg-blue-700"
                   >
                     <PlusCircle className="h-4 w-4 mr-2" />
@@ -1199,6 +1225,34 @@ export default function AdminPage() {
             >
               {selectedCourse ? "O'zgarishlarni saqlash" : "Kursni yaratish"}
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Yangi Tarif yaratish Dialog */}
+      <Dialog open={isTariffFormOpen} onOpenChange={setIsTariffFormOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Yangi tarif yaratish</DialogTitle>
+            <DialogDescription>Tarif nomi, tavsifi va narxini kiriting.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div>
+              <Label htmlFor="tariff-name">Tarif nomi</Label>
+              <Input id="tariff-name" value={tariffName} onChange={(e) => setTariffName(e.target.value)} placeholder="Masalan: BAZZA" className="mt-1" />
+            </div>
+            <div>
+              <Label htmlFor="tariff-desc">Tavsif</Label>
+              <Textarea id="tariff-desc" value={tariffDescription} onChange={(e) => setTariffDescription(e.target.value)} placeholder="Tarif haqida qisqacha ma'lumot" className="mt-1" rows={3} />
+            </div>
+            <div>
+              <Label htmlFor="tariff-price">Narx</Label>
+              <Input id="tariff-price" type="number" value={tariffPrice} onChange={(e) => setTariffPrice(parseFloat(e.target.value))} className="mt-1" />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setIsTariffFormOpen(false)}>Bekor qilish</Button>
+            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleCreateTariff}>Saqlash</Button>
           </div>
         </DialogContent>
       </Dialog>
