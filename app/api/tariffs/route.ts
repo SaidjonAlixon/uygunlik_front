@@ -21,13 +21,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'name va price kerak' }, { status: 400 });
     }
 
-    const tariff = await TariffService.create({
-      name,
-      description,
-      price,
-    });
-
-    return NextResponse.json(tariff, { status: 201 });
+    try {
+      const tariff = await TariffService.create({
+        name,
+        description,
+        price: Number(price),
+      });
+      return NextResponse.json(tariff, { status: 201 });
+    } catch (err: any) {
+      // Handle unique constraint violation (duplicate name)
+      if (err?.code === '23505') {
+        return NextResponse.json({ error: 'Bu nom bilan tarif allaqachon mavjud' }, { status: 409 });
+      }
+      throw err;
+    }
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Server error' }, { status: 500 });
   }

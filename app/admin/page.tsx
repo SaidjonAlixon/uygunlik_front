@@ -101,6 +101,7 @@ export default function AdminPage() {
   const [isLessonFormOpen, setIsLessonFormOpen] = useState(false);
   const [isLessonsViewOpen, setIsLessonsViewOpen] = useState(false);
   const [isTariffFormOpen, setIsTariffFormOpen] = useState(false);
+  const [isCreatingTariff, setIsCreatingTariff] = useState(false);
 
   // Tariff create form states
   const [tariffName, setTariffName] = useState("");
@@ -240,6 +241,8 @@ export default function AdminPage() {
       return;
     }
     try {
+      if (isCreatingTariff) return;
+      setIsCreatingTariff(true);
       await TariffService.create({
         name: tariffName,
         description: tariffDescription,
@@ -254,6 +257,8 @@ export default function AdminPage() {
     } catch (error) {
       console.error("Tarif yaratishda xato:", error);
       toast({ title: "Xatolik", description: "Tarif yaratilmadi", variant: "destructive" });
+    } finally {
+      setIsCreatingTariff(false);
     }
   };
 
@@ -1252,7 +1257,9 @@ export default function AdminPage() {
           </div>
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setIsTariffFormOpen(false)}>Bekor qilish</Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleCreateTariff}>Saqlash</Button>
+            <Button className="bg-blue-600 hover:bg-blue-700 disabled:opacity-60" onClick={handleCreateTariff} disabled={isCreatingTariff} type="button">
+              {isCreatingTariff ? 'Saqlanmoqda...' : 'Saqlash'}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
