@@ -4,8 +4,8 @@ A modern learning platform built with Next.js (Frontend) and NestJS (Backend).
 
 ## Features
 
-- 🎓 Course Management
-- 📹 Video Streaming
+- 📚 Tariff & Lesson Management (Darslik)
+- 📹 Video Streaming (Google Drive integration)
 - 👥 User Management
 - 🔐 Authentication & Authorization
 - 📱 Responsive Design
@@ -24,9 +24,8 @@ A modern learning platform built with Next.js (Frontend) and NestJS (Backend).
 ### Backend
 - NestJS
 - TypeORM
-- SQLite Database
+- PostgreSQL (Production) / SQLite (Development)
 - JWT Authentication
-- Multer (File Upload)
 - Passport.js
 
 ## Quick Start
@@ -55,26 +54,26 @@ A modern learning platform built with Next.js (Frontend) and NestJS (Backend).
 
 ### Production Deployment
 
-#### Option 1: Docker (Recommended)
+#### Vercel Deployment (Recommended)
 
-1. **Prepare environment files**
-   ```bash
-   # Copy and edit environment files
-   cp .env.example .env
-   cp client/.env.example client/.env
-   ```
+1. **Prepare environment variables**
+   - Set up PostgreSQL database on Vercel
+   - Configure environment variables in Vercel dashboard:
+     - `NEXT_PUBLIC_API_URL` - Your API URL
+     - `JWT_SECRET` - Secret key for JWT tokens
+     - `DATABASE_URL` - PostgreSQL connection string
+     - `CORS_ORIGIN` - Your frontend URL
 
-2. **Deploy with Docker**
+2. **Deploy**
    ```bash
-   # Make deploy script executable (Linux/Mac)
-   chmod +x deploy.sh
-   ./deploy.sh
+   # Push to GitHub
+   git push origin master
    
-   # Or manually with Docker Compose
-   docker-compose up --build -d
+   # Connect repository to Vercel
+   # Vercel will automatically deploy on push
    ```
 
-#### Option 2: Manual Deployment
+#### Manual Deployment
 
 1. **Build the application**
    ```bash
@@ -127,16 +126,19 @@ UPLOAD_DEST=./uploads
 - `POST /users/login` - User login
 - `GET /users/me` - Get current user
 
-### Videos
-- `GET /videos` - Get all videos
-- `POST /videos` - Upload video (Admin only)
-- `GET /videos/:id` - Get video by ID
-- `GET /video-stream/stream/:filename` - Stream video
+### Tariffs & Lessons
+- `GET /api/tariffs` - Get all tariffs
+- `POST /api/tariffs` - Create tariff (Admin only)
+- `GET /api/tariffs/:id` - Get tariff by ID
+- `GET /api/tariffs/:id/lessons` - Get lessons for a tariff
+- `POST /api/tariffs/:id/lessons` - Create lesson (Admin only)
+- `GET /api/lessons/:id` - Get lesson by ID
 
-### Courses
-- `GET /courses` - Get all courses
-- `POST /courses` - Create course (Admin only)
-- `GET /courses/:id` - Get course by ID
+### Videos
+- `GET /api/videos` - Get all videos
+- `POST /api/videos` - Create video with Google Drive link (Admin only)
+- `GET /api/videos/:id` - Get video by ID
+- `GET /watch/:id` - Watch video (Google Drive or local)
 
 ## Admin Access
 
@@ -149,21 +151,22 @@ Default admin credentials:
 ```
 anor-client-master/
 ├── app/                    # Next.js frontend pages
+│   ├── admin/             # Admin panel
+│   ├── api/               # API routes
+│   ├── watch/             # Video player
+│   └── ...
 ├── client/                 # NestJS backend
 │   ├── src/
 │   │   ├── modules/       # Feature modules
 │   │   ├── main.ts        # Application entry point
 │   │   └── app.module.ts  # Root module
-│   └── uploads/           # Video uploads
+│   └── uploads/           # Video uploads (optional)
 ├── components/            # React components
 ├── lib/                   # Utility functions
 ├── services/              # API services
 ├── store/                 # State management
 ├── types/                 # TypeScript types
-├── docker-compose.yml     # Docker configuration
-├── Dockerfile            # Frontend Docker image
-├── Dockerfile.backend    # Backend Docker image
-└── nginx.conf            # Nginx configuration
+└── vercel.json            # Vercel configuration
 ```
 
 ## Development Scripts
