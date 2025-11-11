@@ -42,6 +42,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -266,6 +267,66 @@ export default function AdminPage() {
       toast({ title: "Xatolik", description: "Tarif yaratilmadi", variant: "destructive" });
     } finally {
       setIsCreatingTariff(false);
+    }
+  };
+
+  const handleDeleteTariff = async (id: number) => {
+    if (window.confirm("Haqiqatan ham bu tarifni o'chirmoqchimisiz? Barcha darslar ham o'chib ketadi.")) {
+      try {
+        await TariffService.remove(String(id));
+        await fetchTariffs();
+        toast({ title: "Muvaffaqiyatli!", description: "Tarif o'chirildi" });
+      } catch (error: any) {
+        console.error("Tarifni o'chirishda xato:", error);
+        toast({
+          title: "Xatolik",
+          description: error?.response?.data?.error || "Tarifni o'chirib bo'lmadi",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const handleAddLesson = async () => {
+    if (!selectedTariff) {
+      toast({
+        title: "Xatolik",
+        description: "Tarif tanlanmagan",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!lessonTitle || !lessonDescription) {
+      toast({
+        title: "Xatolik",
+        description: "Sarlavha va tavsif kiritilishi kerak",
+        variant: "destructive",
+      });
+      return;
+    }
+    try {
+      await LessonService.create(String(selectedTariff.id), {
+        title: lessonTitle,
+        description: lessonDescription,
+        video_url: lessonVideoUrl || undefined,
+        order_number: lessonOrderNumber || 1,
+        additional_resources: lessonAdditionalResources.length > 0 ? lessonAdditionalResources.map(f => f.name) : undefined,
+      });
+      await fetchLessons(selectedTariff.id);
+      setLessonTitle("");
+      setLessonDescription("");
+      setLessonVideoUrl("");
+      setLessonOrderNumber(1);
+      setLessonAdditionalResources([]);
+      setIsLessonFormOpen(false);
+      toast({ title: "Muvaffaqiyatli!", description: "Dars qo'shildi" });
+    } catch (error: any) {
+      console.error("Dars qo'shishda xato:", error);
+      toast({
+        title: "Xatolik",
+        description: error?.response?.data?.error || "Dars qo'shilmadi",
+        variant: "destructive",
+      });
     }
   };
 
@@ -718,16 +779,26 @@ export default function AdminPage() {
                       <CardHeader>
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-xl">{tariff.name}</CardTitle>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 w-6 p-0"
-                            onClick={() => {
-                              // Tarifni tahrirlash
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0"
+                              onClick={() => {
+                                // Tarifni tahrirlash
+                              }}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                              onClick={() => handleDeleteTariff(tariff.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                         <CardDescription className="mt-2">
                           {tariff.description}
@@ -1714,6 +1785,27 @@ export default function AdminPage() {
               </div>
             </div>
           </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsLessonFormOpen(false);
+                setLessonTitle("");
+                setLessonDescription("");
+                setLessonVideoUrl("");
+                setLessonOrderNumber(1);
+                setLessonAdditionalResources([]);
+              }}
+            >
+              Bekor qilish
+            </Button>
+            <Button
+              onClick={handleAddLesson}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              Qo'shish
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
