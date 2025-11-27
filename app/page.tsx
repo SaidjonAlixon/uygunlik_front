@@ -713,7 +713,7 @@ export default function HomePage() {
               >
                 <ul className="text-[#5D1111] flex items-center flex-col sm:flex-row gap-x-1">
                   <li className="font-bold">Start:</li>
-                  <li>Yanvar, 2026</li>
+                  <li>Mart, 2026</li>
                   <li className="font-bold">Davomiyligi:</li>
                   <li>8 hafta</li>
                 </ul>
