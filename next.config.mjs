@@ -6,10 +6,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Use webpack instead of Turbopack
-  webpack: (config, { isServer }) => {
-    return config;
-  },
+  // Empty turbopack config to silence the error
+  turbopack: {},
 }
 
 export default nextConfig
