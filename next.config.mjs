@@ -9,6 +9,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Disable Turbopack to fix CSS parsing issues
+  experimental: {
+    turbo: false,
+  },
 }
 
 export default nextConfig
