@@ -9,9 +9,13 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Disable Turbopack to fix CSS parsing issues
+  // Disable Turbopack completely to fix CSS parsing issues
   experimental: {
     turbo: false,
+  },
+  // Use webpack instead of Turbopack
+  webpack: (config, { isServer }) => {
+    return config;
   },
 }
 
