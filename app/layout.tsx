@@ -7,8 +7,6 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "@/components/session-provider";
-import { Snowfall } from "@/components/snowfall";
-import { StormClouds } from "@/components/storm-clouds";
 import { Dancing_Script } from "next/font/google";
 import { useEffect } from "react";
 import { useUserStore } from "@/store/user.store";
@@ -45,8 +43,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider>{children}</SessionProvider>
-          <StormClouds />
-          <Snowfall />
         </ThemeProvider>
         <Analytics />
       </body>
